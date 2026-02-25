@@ -1,0 +1,21 @@
+<style>
+    .container-fluid{
+        min-height: fit-content;
+    }
+</style>
+<div class="container-fluid pt-3">
+<form action="{% url 'customer' %}">
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="p-2">    <input type="text" id="q" name="q" value="{{search | default:''}}" class="form-control mb-4" placeholder="search">
+</div>
+        </div>
+        <div class="col-sm-4">
+            <div class="p-2">
+                    <button class="form-control btn btn-primary">search</button>
+
+            </div>
+        </div>
+    </div>
+</form>
+</div>

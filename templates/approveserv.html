@@ -1,0 +1,171 @@
+{% extends 'baseadmin.html' %}
+{% block content %}
+{% load static %}
+
+
+
+<div class="container grid  align-items-center">
+   <div class="content-wrapper">
+     <h1 class="text-center mb-5">approve department / service </h1>
+     <h6>{% for i in messages %}
+            {{i}}
+            {% endfor %}</h6>
+    <div class="row">
+        <div class="col-sm-6">
+            {% if ddata %}
+            <div class="content-wrapper">
+                <form action="{% url 'aprovdept' ddata.id %}" method="post" enctype="multipart/form-data" class="grid">
+                        {% csrf_token %}
+                    <h2>Department</h2>
+                    <input type="text" name="dept_name" value=" {{ddata.name}}" class="form-control">
+                    <input type="text" name="dept_description" value=" {{ddata.description}} " class="form-control4">
+                    <input type="file" name="dept_image" value="{{ddata.image}}" class="form-control">
+                    {% if data.department.status == 0 or ddata.status == 0 %}
+                    <button disabled class="form-control">Approved</button>
+                    {% else %}
+                    <input type="submit" value="approve" class="form-control btn btn-info">
+                    {% endif %}
+                    <a href=""  class="btn btn-danger " data-toggle="modal" data-target="#myModal3{{ddata.id}}">reject</a>
+                    </form>
+            </div>
+            {% else %}
+            
+            <div class="content-wrapper">
+                <form action="{% url 'apdept' data.id %}" method="post" enctype="multipart/form-data" class="grid">
+                        {% csrf_token %}
+                    <h2>Department</h2>
+                    <input type="text" name="dept_name" value="{{data.department.name}}" class="form-control">
+                    <input type="text" name="dept_description" value="{{data.department.description}} " class="form-control4">
+                    <input type="file" name="dept_image" value="{{data.department.image}}" class="form-control">
+                    {% if data.department.status == 0 or ddata.status == 0 %}
+                    <button disabled class="form-control">Approved</button>
+                    {% else %}
+                    <input type="submit" value="approve" class="form-control btn btn-info">
+                    {% endif %}
+                    <a href=""  class="btn btn-danger " data-toggle="modal" data-target="#myModal2{{data.id}}">reject</a>
+                    </form>
+            </div>
+
+          
+            
+
+        </div>
+        <div class="col-sm-6">
+            <div class="content-wrapper">
+                <form action="{% url 'apserv' data.id %}" method="post" class="grid">
+                    {% csrf_token %}
+                    <h2>Service</h2>
+
+                    <input type="text" name="serv_name" value="{{data.name}}" class="form-control">
+                    <input type="text" name="serv_description" value="{{data.description}}" class="form-control">
+                    {% if data.status == 0 %}
+                    <button disabled class="form-control btn btn-info">Approved</button>
+                    {% else %}
+                    <input type="submit" value="approve" class="btn btn-primary form-control">
+                    {% endif %}
+                    <a href=""  class="btn btn-danger " data-toggle="modal" data-target="#myModal1{{data.id}}">reject</a>
+                </form>
+            </div>
+        </div>
+          {% endif %}
+    </div>
+   </div>
+</div>
+
+
+
+
+
+
+
+
+
+{% if ddata %}
+
+
+   <div class="modal" id="myModa3{{ddata.id}}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header btn-danger">
+          <h4 class="modal-title">Confirm</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+         Do you want to Delete the Department   {{ddata.name}} ?
+         All the users assigned to this departmnt will also be deleted.
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+          <a href="{% url 'rejectdepart' ddata.id %}" class="btn btn-danger">Reject</a>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+{% else %}
+  
+
+   <div class="modal" id="myModa2{{data.id}}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header btn-danger">
+          <h4 class="modal-title">Confirm</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+         Do you want to Delete the Department   {{data.name}} ?
+         All the users assigned to this Department will also be deleted.
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+          <a href="{% url 'rejdept' data.id %}" class="btn btn-danger">Reject</a>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+  
+
+  
+   <div class="modal" id="myModal1{{data.id}}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header btn-danger">
+          <h4 class="modal-title">Confirm</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+         Do you want to Delete the service   {{i.name}} ?
+         All the users assigned to this service will also be deleted.
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+          <a href="{% url 'rejserv' data.id %}" class="btn btn-danger">Reject</a>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,51 @@
+<style>
+    .img-wrapper{
+
+        width: 100%;
+        height: 100%;
+        border-radius: 5px;
+        overflow: hidden;
+
+    }
+    .img-wrapper img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+</style>
+<div class="container d-flex justify-content-center align-items-center">
+    <div class="content-wrapper w-100">
+        <h1>Add Contents</h1>
+        <h6>{% for i in messages %}
+            {{i}}
+            {% endfor %}</h6>
+
+        <form action="{% url 'reg_profile' %}" method="post" enctype="multipart/form-data" >
+            {% csrf_token %}
+           <div class="row">
+            <div class="col-sm-8 grid">
+                 <input type="text" name="header" id="header" placeholder="header" class="form-control">
+            <textarea rows="5"type="text" name="content" id="content" placeholder="content" class="form-control"></textarea>
+            <input type="file" name="image" id="image" placeholder="header"  class="form-control">
+            <input type="submit"  class="btn btn-info ">
+
+            </div>
+            <div class="col-sm-4">
+                <div class="img-wrapper"><img src="" id="preview" alt="Preview your image here"></div>
+            </div>
+           </div>
+        </form>
+</div>
+
+<script>
+    document.getElementById('image').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                document.getElementById('preview').src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>

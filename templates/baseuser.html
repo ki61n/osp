@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<style>
+    
+          
+*{
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    scrollbar-width: none;
+}
+
+ .container{
+            min-height:91.2svh;
+ }
+.main-container{
+    background-image: linear-gradient(45deg,rgb(149, 149, 236),rgb(199, 125, 199));
+    min-height: 91.2svh;
+
+
+
+}
+ .proimg{
+            background-position: top;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        
+        .container-fluid{
+            min-height: 91.2svh;
+        }
+        .content-wrapper{
+            padding: 20px;
+            border:1px solid rgba(255, 253, 253, 0.3);
+            background-color: rgba(255, 254, 254, 0.7);
+            border-radius: 20px;
+            box-shadow:inset 0 0 10px 10px rgba(255, 254, 254, 0.267);
+            min-height: 40svh;
+        }
+        .mx-w-500{
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .grid{
+            display: grid;
+            gap: 10px;
+        }
+        small{
+            color: red;
+        }
+        h6{
+            text-align: center;
+        }
+        .grid2{
+            display: grid;
+            gap: 10px;
+        }
+        .ml{
+            margin-left: auto;
+        }
+
+
+        @media (width < 500px) {
+            .content-wrapper{
+                padding: 20px 5px 20px 5px;
+                border-radius: 5px;
+            }
+            .ml{
+                margin-left: 0px;
+                
+            }
+            
+        }
+        @media (width > 500px) {
+            
+            .grid2{
+
+                display: flex;
+
+            }
+            
+        }
+
+</style>
+</head>
+<body>
+    
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border">
+        <a class="navbar-brand" href="{% url 'customer' %}">Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav w-100 align-items-center justify-content-start grid2">
+                <li class="nav-item"><a class="nav-link" href="{% url 'viewcustask' %}">My Tasks</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" id="departmentsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Departments
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="departmentsDropdown">
+                        {% for i in depdata %}
+                        <a class="dropdown-item" href="{% url 'viewserindep' i.id %}">{{i.name}}</a>
+                        {% endfor %}
+                    </div>
+                </li>
+                <li class="nav-item dropdown ml">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div class="d-flex align-items-center">
+                            <div class="proimg" style="width: 40px; height: 40px; border-radius: 50% ; background-image: url('{{user.image.url}}'); margin-right: 10px;"></div> 
+                        </div>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="profileDropdown">
+                        <a class="dropdown-item" href="{% url 'profilecus' %}">View Profile</a>
+                        <a class="dropdown-item" href="{% url 'edituser' %}">Edit Profile</a>
+                    </div>
+                </li>
+                <li class="nav-item "><a class="nav-link" href="{% url 'out' %}">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <div class="main-container">
+    {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+{% extends 'baseuser.html' %}
+{% block content %}
+{% load static %}
+
+<div class="container grid  align-items-center">
+    <div class="content-wrapper">
+        <h1>Register task</h1>
+
+<h2>{% for i in messages %}{{i}}{% endfor %}</h2>
+
+<form action="{% url 'regTask' data.id %}" method="post" enctype="multipart/form-data" class="grid">
+    {% csrf_token %}
+
+
+    <!-- <select name="services" id="" class="form-control" required>
+        #{% for i in sdata %}
+        <option value="{{i.id}}">{{i.name}}</option>
+        #{% endfor %}
+    </select> -->
+    <input type="text" name="services" value="{{udata.service.name}}" class="form-control" required disabled>
+
+    <input type="text" name="details" placeholder="details" class="form-control" required>
+    <input type="text" name="location" placeholder="location" value="{{udata.address}}" class="form-control" required>
+    <input type="date" name="date" class="form-control" required>
+    <script>
+        $(document).ready(function(){
+            var today = new Date().toISOString().split('T')[0];
+            $('input[name="date"]').attr('min', today);
+        });
+    </script>
+    <input type="file" name="image" type="image/*" class="form-control"required>
+    <input type="submit" class="btn btn-info">
+
+
+
+</form>
+    </div>
+</div>
+{% endblock %}

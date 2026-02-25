@@ -1,0 +1,313 @@
+
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+
+<div class="container-fluid d-flex justify-content-center align-items-center py-5">
+    <div class="content-wrapper w-100">
+        
+        <h1 class="text-center mb-4">Become a Service Provider</h1>
+
+        <h6 id="err" class="text-center text-danger">
+            {% for i in messages %}
+                {{i}}
+            {% endfor %}
+        </h6>
+
+        <form action="{% url 'r_worker' %}" method="post" enctype="multipart/form-data" onsubmit="return val(event)" class="">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-sm-8 p-4 ">
+                    <div class="  content-wrapper">
+                        <div class=" row ">
+                            <div class="col-sm-6"> 
+                                <div class="form-group">
+                                    <input type="text" placeholder="First Name" name="fname" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input type="text" placeholder="Last Name" name="lname" class="form-control" required>
+                                </div>
+                            </div>
+                           
+
+                        </div>
+
+                        <div class=" row ">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input type="text" placeholder="User Name" name="uname" id="uname" class="form-control" required>
+                                    <small id="unameerror" class="form-text text-danger"></small>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input type="text" placeholder="Email" name="email" id="email" class="form-control" required>
+                                    <small id="emailerror" class="form-text text-danger"></small>
+                                </div>
+                            </div>
+                           
+
+                        </div>
+
+                        <div class=" row ">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input type="text" placeholder="Phone" name="phone" id="phone" class="form-control" required>
+                                    <small id="phoneerror" class="form-text text-danger"></small>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                 <div class="form-group">
+                                    <textarea name="address" placeholder="Address" class="form-control" rows="1" required></textarea>
+                                </div>
+                            </div>
+                           
+
+                        </div>
+
+                        <div class="form-group">
+                        <label for="depatment">Department</label>
+                        <select name="department" id="depatment" onchange="getservice()" class="form-control" required>
+                            {% for i in dep %}
+                                <option value="{{i.id}}">{{i.name}}</option>
+                            {% endfor %}
+                            <option value="other" id="others">Others (New)</option>
+                        </select>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-sm-6 ">
+                            <div id="hiddenblock" style="display: none;">
+                        <div class="form-group">
+                            <input type="text" placeholder="New Department Name" name="dep_name" id="adddepartment" class="form-control"  required>
+                        </div>
+                        <div class="form-group">
+                            <textarea placeholder="New Department Description" name="dep_description" id="adddescription" class="form-control" rows="2"  required></textarea>
+                        </div>
+                    </div>
+
+                        </div>
+
+                        <div class="col-sm-6">
+
+                            <div id="hiddenblock2" style="display: none;">
+                        <div class="form-group">
+                            <input type="text" placeholder="New Service Name" name="serv_name" id="addservice" class="form-control"  required>
+                        </div>
+                        <div class="form-group">
+                            <textarea placeholder="New Service Description" name="serv_description" id="addservicedescription" class="form-control" rows="2"  required></textarea>
+                        </div>
+                    </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="service-group">
+                        <label for="service">Service</label>
+                        <select name="service" id="service" class="form-control"  required>
+                            <option value="">Select a service</option>
+                        </select>
+                    </div>
+
+
+
+
+                    </div>
+
+                </div>
+
+                <div class="col-sm-4 p-4 ">
+                    <div class="content-wrapper">
+                        <div class="form-group">
+                            <label for="file">Proof of Service (e.g., certificate)</label>
+                            <input type="file" name="file" id="file" class="form-control-file" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_proof">ID Proof</label>
+                            <input type="file" name="id_proof" id="id_proof" class="form-control-file" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="image">Profile Picture</label>
+                            <input type="file" name="image" id="image" class="form-control-file">
+                        </div>
+
+
+                        <input type="submit" value="Register" class="btn bg btn-block mt-4">
+
+
+
+                        
+                    </div>
+                </div>
+            </div>
+          
+
+           
+        </form>
+    </div>
+</div>
+
+<script>
+    function getservice(){
+        id=$('#depatment').val()
+        var hiddenblock = document.getElementById('hiddenblock');
+        var hiddenblock2 = document.getElementById('hiddenblock2');
+        var serviceGroup = document.getElementById('service-group');
+
+        if(id=='other'){
+            hiddenblock.style.display='block';
+            hiddenblock2.style.display='block';
+            serviceGroup.style.display='none';
+            $('#adddepartment').attr('required', true);
+            $('#adddescription').attr('required', true);
+            $('#addservice').attr('required', true);
+            $('#addservicedescription').attr('required', true);
+            $('#service').removeAttr('required');
+            
+        }else{
+            hiddenblock.style.display='none';
+            hiddenblock2.style.display='none';
+            serviceGroup.style.display='block';
+            $('#adddepartment').removeAttr('required');
+            $('#adddescription').removeAttr('required');
+            $('#addservice').removeAttr('required');
+            $('#addservicedescription').removeAttr('required');
+            $('#service').attr('required', true);
+            $.ajax({
+                url:"{% url 'getserv' %}?id="+id,
+                success: function(data){
+                    $('#service').empty()
+                    if(data.data.length==0){
+                        $('#service').append("<option value=''>No service available</option>")
+                        
+                    }else{
+                    $.each(data.data, function(key, value){
+                        $('#service').append(`
+                        <option value="${value.id}">${value.name}</option>
+                        `)
+                    })
+                }
+                }
+            })
+        }
+
+    }
+
+
+        function val(e){
+            email=document.getElementById("email").value
+            contact=document.getElementById("phone").value
+            err=document.getElementById('err')
+            if (err) {
+                err.innerHTML="";
+            }
+
+            emailpattern=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            phonepattern=/^[6-9][0-9]{9}$/;
+
+            if (! emailpattern.test(email)){
+                err.innerHTML="invalid email address"
+                return false;
+
+            }
+            else if (contact && !phonepattern.test(contact)){
+                err.innerHTML="Phone number must contan 10 digits and starts with 6-9"
+                return false;
+            }
+            else{
+                err.innerHTML="";
+                return true;
+            }
+
+        }
+
+
+    $(document).ready(function(){
+        $("#uname").on('keyup',function(){
+
+            checkuname()
+        })
+
+    $("#email").keyup(function(){
+
+            checkemail()
+    })
+
+    $("#phone").keyup(function(){
+
+        checkphone()
+    })
+})
+
+function checkuname(){
+    var uname = $("#uname").val()
+    if (uname.length ==0){
+        $('#unameerror').text('')
+        return
+    }
+    $.ajax({
+        type:'GET',
+        url:"{% url 'checkuname' %}?username="+uname,
+        success:function(response){
+            if (response.user ){
+                $('#unameerror').text('username alredy exist')
+            }else{
+                $('#unameerror').text('')
+
+            }
+
+
+    }})
+}
+
+
+function checkemail(){
+    email=$('#email').val()
+    if (email.length==0){
+        $('#emailerror').text('')
+        return
+    }
+    $.ajax({
+        type:'GET',
+        url:"{% url 'chackmail' %}?email="+email,
+        success:function(response){
+            if(response.user){
+                $('#emailerror').text('email alredy exist')
+                
+            }else{
+                $('#emailerror').text('')
+            }
+        }
+    })
+}
+
+
+
+function checkphone(){
+    phone=$('#phone').val()
+    if (phone.length==0){
+        $('#phoneerror').text('')
+        return
+    }
+    $.ajax({
+        type:'GET',
+        url:"{% url 'chackphone' %}?phone="+phone,
+        success:function(response){
+            if(response.user){
+                $('#phoneerror').text('phone number alredy exist')
+                
+            }else{
+                $('#phoneerror').text('')
+            }
+        }
+    })
+}
+    
+</script>
+{% endblock %}

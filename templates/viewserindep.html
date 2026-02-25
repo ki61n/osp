@@ -1,0 +1,120 @@
+{% extends 'baseuser.html' %}
+{% block content %}
+{% load static %}
+
+
+
+
+
+
+
+<style>
+    .img-container{
+        display: flex;
+        justify-content: center;
+        align-items: center;;
+
+    }
+    
+    .img{
+        height:200px;
+        width:100%;
+        border-radius: 5px;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: top;
+    }
+    .bg{
+        background-color: aliceblue;
+        border-radius: 15px;
+    
+    }
+    a,a:hover{
+        text-decoration: none;
+        color: black;
+
+    }
+    .bold
+    {
+        font-weight: bold;
+    }
+    .body-container{
+        padding: 4px 8px;
+    }
+    .bb{
+        border-bottom: 1px solid rgba(247, 79, 219, 0.818);
+        padding-bottom: 4px;
+    }
+    .img1{
+        width: 100%;
+        height: 100%;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center  ;   
+        border-radius: 5px;
+    }
+    .content{
+        padding: 20px;
+        
+        border-radius: 1px;
+        background-color: rgb(45, 46, 46);
+        color: rgb(198, 166, 227);
+        
+
+    }
+
+</style>
+<div class="content mb-5">
+        <div class="row">
+            <div class="col-sm-3 p-2 d-flex flex-column justify-content-center">
+                <h2>{{dedata.name}}</h2>
+                <p>{{dedata.description}}</p>
+                
+            </div>
+            <div class="col-sm-9 p-3">
+                <div class="img1" style="height: 250px; background-image:url('{{dedata.image.url}}');"></div>
+            </div>
+        </div>
+        
+    </div>
+
+<div class="container-fluid">
+      
+    <div class="content-wrapper">
+<h1>view services providers</h1>
+        <div class="row">
+
+            {% for i in data %}
+            <div class="col-sm-3 p-2">
+                <a href="{% url 'viewspdetails' i.id %}">
+                <div class="container-wrapper  bg ">
+                    <div class="img-container">
+                        <div class="img" style="background-image: url('{{i.image.url}}');"></div>        
+                    </div>
+                    <div class="body-container">
+                        <div class=""><h6 class="bb"> {{i.department.name}} </h6> 
+                        
+
+                           <div class="d-flex">
+                             <p class="p-2"><span class="bold">Provider :  </span> {{i.user.first_name}} {{i.user.last_name}}     </p>
+                            <p class="p-2">-  {{i.service.name}}  </p>
+                           </div>
+                            
+                    </div>
+                </div>
+                </div>
+                </a>
+
+            </div>
+            {% endfor %}
+        </div>
+
+
+        
+
+
+  
+</div>
+
+    </div>
+{% endblock%}

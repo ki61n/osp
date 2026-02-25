@@ -1,0 +1,64 @@
+{% extends 'baseuser.html' %}
+{% block content %}
+{% load static %}
+<style>
+    .container-fluid{
+        min-height: fit-content;
+
+    }
+    
+        .content{
+            border-radius: 5px;
+            background-color: aliceblue;
+            
+
+
+        }
+
+        .br{
+            border-left: 1px solid rgba(247, 79, 219, 0.818);
+
+
+        }
+    
+</style>
+
+<div class="container-fluid py-2">
+   <div class="content px-4">
+     <div class="row">
+        <div class="col-sm-3 p-2">
+            <div class="img-container"><div class="img"><img src="{{pdata.image.url}}" alt=""></div></div>
+
+        </div>
+        <div class="col-sm-9 p-3 br d-flex flex-column justify-content-center">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h2>Welcome to {{pdata.user.first_name}} {{pdata.user.last_name}} 's works</h2>
+            <p>we work at {{pdata.department.name}} department</p>
+            <p>here  you can applay for {{pdata.service.name}} service</p>
+                </div>
+                <div class="col-sm-6 br grid">
+                    <h2>Contact as :</h2>
+                   <div> Email: <a href="mailto:{{pdata.user.email}}">{{pdata.user.email}}</a></div>
+                    <div>Phone: <a href="tel:{{pdata.phone}}">{{pdata.phone}}</a></div>
+                    <div>Address: {{pdata.address}}</div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end align-items-center  mx-5"><p class="mx-5">Request your services here : </p> <a href="{% url 'regtaskpage' pdata.id %}  " class="btn btn-info">Request Service</a></div>
+
+            
+        </div>
+    </div>
+   </div>
+
+</div>
+
+
+
+
+<div class="w-100">
+    
+{% include 'viewprodetails.html' %}
+
+</div>
+{% endblock %}

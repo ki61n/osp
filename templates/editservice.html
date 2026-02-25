@@ -1,0 +1,48 @@
+{% extends 'baseadmin.html' %}
+{% block content %}
+{% load static %}
+
+<style>
+    .mx-w-500{
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    @media (width < 500px) {
+        .content-wrapper{
+            padding: 20px 5px 20px 5px;
+            border-radius: 5px;
+            margin: 0;
+        }
+        
+    }
+</style>
+
+<div class="container  d-flex  align-items-center">
+    <div class="content-wrapper w-100 mx-w-500">
+        <h1>edit Service</h1>
+        <h2>
+            {% for i in messages %}
+            {{i}}
+            {% endfor %}
+
+        </h2>
+
+        <form action="{% url 'e_serv' data.id %}" method="post" class="grid">
+            {% csrf_token %}
+            <input type="text" name="name" value="{{data.name}}" class="form-control">
+            <input type="text" name="description" value="{{data.description}}"  class="form-control">
+            <select name="department" id=""  class="form-control">
+                {% for i in ddata %}
+                {% if i.id == data.department.id %}
+                <option value="{{i.id}}" selected >{{i.name}}</option>
+                {% else %}
+                <option value="{{i.id}}">{{i.name}}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+            <input type="submit" value="update"  class="form-control btn btn-info">
+        </form>
+    </div>
+</div>
+
+{% endblock %}

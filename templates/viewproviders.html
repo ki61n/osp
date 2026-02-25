@@ -1,0 +1,78 @@
+<style>
+    .img-container{
+        display: flex;
+        justify-content: center;
+        align-items: center;;
+
+    }
+    
+    .img{
+        height:200px;
+        width:100%;
+        border-radius: 5px;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: top;
+    }
+    .bg{
+        background-color: aliceblue;
+        border-radius: 15px;
+    
+    }
+    a,a:hover{
+        text-decoration: none;
+        color: black;
+
+    }
+    .bold
+    {
+        font-weight: bold;
+    }
+    .body-container{
+        padding: 4px 8px;
+    }
+    .bb{
+        border-bottom: 1px solid rgba(247, 79, 219, 0.818);
+        padding-bottom: 4px;
+    }
+
+</style>
+
+<div class="container-fluid">
+    <div class="content-wrapper">
+        <h1>service provider</h1>
+        <div class="row">
+
+            {% for i in spdata %}
+            <div class="col-sm-3 p-2">
+                <a href="{% url 'viewspdetails' i.id %}">
+                <div class="container-wrapper  bg ">
+                    <div class="img-container">
+                        <div class="img" style="background-image: url('{{i.image.url}}');"></div>        
+                    </div>
+                    <div class="body-container">
+                        <div class=""><h6 class="bb"> {{i.department.name}} </h6> 
+                        
+
+                           <div class="d-flex">
+                             <p class="p-2"><span class="bold">Provider :  </span> {{i.user.first_name}} {{i.user.last_name}}     </p>
+                            <p class="p-2">-  {{i.service.name}}  </p>
+                           </div>
+                            
+                    </div>
+                </div>
+                </div>
+                </a>
+
+            </div>
+            {% endfor %}
+        </div>
+
+
+        
+
+
+  
+</div>
+
+    </div>

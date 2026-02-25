@@ -1,0 +1,197 @@
+<style>
+    .gap{
+        gap: 10px;
+    }
+</style>
+<div class="container d-flex justify-content-center align-items-center py-5 ">
+    <div class="content-wrapper" style="width: 100%;">
+        <h1 class="text-center">Edit Profile</h1>
+        <div class="d-flex justify-content-end mb-3">
+            {% if data.user.user_type == '1' %}
+                <a href="{% url 'changeworkerpass' %}" class="btn btn-warning">Change Password</a>
+            {% else %}
+                <a href="{% url 'changecustonerpass' %}" class="btn btn-warning">Change Password</a>
+            {% endif %}
+        </div>
+        
+        <h6 id="err" class="text-center text-danger">
+            {% for i in messages %}
+                {{i}}
+            {% endfor %}
+        </h6>
+        
+        <form action="{% url 'editprofile' %}" method="post" enctype="multipart/form-data" onsubmit="return val(event)">
+            {% csrf_token %}
+            <input type="hidden" id="id" value="{{ data.id }}">
+            
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <input type="text" placeholder="First Name" name="fname" value="{{data.user.first_name}}" class="form-control">
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="text" placeholder="Last Name" name="lname" value="{{data.user.last_name}}" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <input type="text" placeholder="User Name" name="uname" id="uname" value="{{data.user.username}}" class="form-control">
+                        <small id="unameerror" class="form-text text-danger"></small>
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="text" placeholder="Email" name="email" id="email" value="{{data.user.email}}" class="form-control">
+                        <small id="emailerror" class="form-text text-danger"></small>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="text" placeholder="Phone" name="phone" id="phone" value="{{data.phone}}" class="form-control">
+                <small id="phoneerror" class="form-text text-danger"></small>
+            </div>
+            <div class="form-group">
+                <textarea name="address" placeholder="Address" class="form-control">{{data.address}}</textarea>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <label for="image">Profile Picture</label>
+                        <input type="file" name="image" id="image" class="form-control pb-5 ">
+                    </div>
+                    <div class="col-sm-4">
+                        {% if data.image %}
+                        <div class="mt-2 grid justify-content-center" style="object-fit: contain; object-position: top;">
+                            <p class="mb-1">Current:</p>
+                            <img src="{{ data.image.url }}" alt="Current profile picture" style="max-width: 100px; max-height: 100px; border-radius: 5px;">
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <input type="submit" value="Update" class="btn btn-primary btn-block mt-4">
+        </form>
+    </div>
+</div>
+
+<script>
+
+ function val(e){
+            email=document.getElementById("email").value
+            
+            contact=document.getElementById("phone").value
+            var err=document.getElementById('err')
+            if (err) {
+                err.innerHTML="";
+            }
+
+
+            emailpattern=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            phonepattern=/^[6-9][0-9]{9}$/;
+
+            if (! emailpattern.test(email)){
+                err.innerHTML="invalid email address"
+                return false;
+
+            }
+            else if (! phonepattern.test(contact)){
+                err.innerHTML="Phone number must contan 10 digits and starts with 6-9"
+                return false;
+            }
+            else{
+                err.innerHTML="";
+                return true;
+            }
+
+
+
+        }
+
+
+    $(document).ready(function(){
+        $("#uname").on('keyup',function(){
+
+            checkuname()
+        })
+
+        $("#email").keyup(function(){
+
+                checkemail()
+        })
+
+        $("#phone").keyup(function(){
+
+            checkphone()
+        })
+    })
+
+
+
+function checkuname(){
+    var uname = $("#uname").val()
+    if (uname.length ==0){
+        $('#unameerror').text('')
+        return
+    }
+    $.ajax({
+        type:'GET',
+        url:"{% url 'echeckuname' %}?username="+uname,
+        success:function(response){
+            if (response.user ){
+                $('#unameerror').text('username alredy exist')
+            }else{
+                $('#unameerror').text('')
+
+            }
+
+
+    }})
+}
+
+
+function checkemail(){
+    email=$('#email').val()
+    if (email.length==0){
+        $('#emailerror').text('')
+        return
+    }
+    $.ajax({
+        type:'GET',
+        url:"{% url 'echackmail' %}?email="+email,
+        success:function(response){
+            if(response.user){
+                $('#emailerror').text('email alredy exist')
+                
+            }else{
+                $('#emailerror').text('')
+            }
+        }
+    })
+}
+
+
+
+function checkphone(){
+    id=$('#id').val()
+    console.log(id);
+    
+    phone=$('#phone').val()
+    if (phone.length==0){
+        $('#phoneerror').text('')
+        return
+    }
+    $.ajax({
+        type:'GET',
+        url:"{% url 'echackphone'%}?phone="+phone+"&id="+id,
+        success:function(response){
+            if(response.user){
+                $('#phoneerror').text('phone number alredy exist')
+                
+            }else{
+                $('#phoneerror').text('')
+            }
+        }
+    })
+}
+    
+</script>

@@ -1,0 +1,33 @@
+
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<style>
+
+    .content-wrapper{
+    width:400px;
+    }
+</style>
+
+
+<div class="container  d-flex  justify-content-center align-items-center">
+    <div class="content-wrapper">
+
+        <h6>{% for i in messages %}
+{{i}}
+{% endfor %}</h6>
+        
+
+<h1>sign in</h1>
+
+<form action="{% url 'log' %}" method="post" class="grid">
+    {% csrf_token %}
+
+    <input type="text" name="uname" id="" placeholder="Username" class="form-control">
+    <input type="password" name="password" id="" placeholder="Password" class="form-control">
+    <input type="submit" value="login" class="form-control bg">
+</form>
+
+    </div>
+</div>
+{% endblock %}

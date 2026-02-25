@@ -1,0 +1,14 @@
+{% extends 'baseworker.html' %}
+ 
+ {% block content %}
+ {% load static %}
+ {% for i in messages %}
+ {{i}}
+ {% endfor %}
+
+<div>
+{% include 'profilecon.html' %}
+</div>
+<div class="">{% include 'viewprodetails.html' %}
+</div>
+{% endblock %}

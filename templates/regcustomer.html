@@ -1,0 +1,177 @@
+
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+
+
+<div class="container  d-flex  justify-content-center align-items-center">
+    <div class="content-wrapper">
+
+        <h6 id="err">{% for i in messages %}
+{{i}}
+{% endfor %}</h6>
+        
+<h1>Signup</h1>
+
+<form action="{% url 'r_customer' %}" method="post" enctype="multipart/form-data" onsubmit="return val(event)">
+    {% csrf_token %}
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-6 mb-3 mb-sm-0">
+                <input type="text" placeholder="First Name" name="fname" class="form-control">
+            </div>
+            <div class="col-sm-6">
+                <input type="text" placeholder="Last Name" name="lname" class="form-control">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-6 mb-3 mb-sm-0">
+                <input type="text" placeholder="User Name" name="uname" id="uname" class="form-control">
+                <small id="unameerror" class="form-text text-danger"></small>
+            </div>
+                <div class="col-sm-6">
+                <input type="text" placeholder="phone" name="phone" id="phone" class="form-control">
+        <small id="phoneerror" class="form-text text-danger"></small>
+
+                
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <input type="text" placeholder="Email" name="email" id="email" class="form-control">
+        <small id="emailerror" class="form-text text-danger"></small>
+       
+    </div>
+    <div class="form-group">
+        <textarea name="address" placeholder="address" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="image">Profile Picture</label>
+        <input type="file" name="image" id="image" class="form-control pb-5 align-items-center">
+    </div>
+    <input type="submit" class="form-control btn bg" value="Sign Up">
+</form>
+
+
+    </div>
+</div>
+<script>
+
+ function val(e){
+            email=document.getElementById("email").value
+            
+            contact=document.getElementById("phone").value
+            err=document.getElementById('err')
+            err.innerHTML="";
+
+
+            emailpattern=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            phonepattern=/^[6-9][0-9]{9}$/;
+
+            if (! emailpattern.test(email)){
+                err.innerHTML="invalid email address"
+                return false;
+
+            }
+            else if (! phonepattern.test(contact)){
+                err.innerHTML="Phone number must contan 10 digits and starts with 6-9"
+                return false;
+            }
+            else{
+                err.innerHTML="";
+                return true;
+            }
+
+
+
+        }
+
+
+
+
+    $(document).ready(function(){
+        $("#uname").on('keyup',function(){
+
+            checkuname()
+        })
+
+    $("#email").keyup(function(){
+
+            checkemail()
+    })
+
+    $("#phone").keyup(function(){
+
+        checkphone()
+    })
+})
+
+function checkuname(){
+    var uname = $("#uname").val()
+    if (uname.length ==0){
+        $('#unameerror').text('')
+        return
+    }
+    $.ajax({
+        type:'GET',
+        url:"{% url 'checkuname' %}?username="+uname,
+        success:function(response){
+            if (response.user ){
+                $('#unameerror').text('username alredy exist')
+            }else{
+                $('#unameerror').text('')
+
+            }
+
+
+    }})
+}
+
+
+function checkemail(){
+    email=$('#email').val()
+    if (email.length==0){
+        $('#emailerror').text('')
+        return
+    }
+    $.ajax({
+        type:'GET',
+        url:"{% url 'chackmail' %}?email="+email,
+        success:function(response){
+            if(response.user){
+                $('#emailerror').text('email alredy exist')
+                
+            }else{
+                $('#emailerror').text('')
+            }
+        }
+    })
+}
+
+
+
+function checkphone(){
+    phone=$('#phone').val()
+    if (phone.length==0){
+        $('#phoneerror').text('')
+        return
+    }
+    $.ajax({
+        type:'GET',
+        url:"{% url 'chackphone' %}?phone="+phone,
+        success:function(response){
+            if(response.user){
+                $('#phoneerror').text('phone number alredy exist')
+                
+            }else{
+                $('#phoneerror').text('')
+            }
+        }
+    })
+}
+    
+</script>
+{% endblock %}

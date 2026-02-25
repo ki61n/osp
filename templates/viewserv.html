@@ -1,0 +1,67 @@
+{% extends 'baseadmin.html' %}
+{% block content %}
+{% load static %}
+<div class="container-fluid d-flex justify-content-center align-items-center py-5">
+    <div class="content-wrapper w-100">
+        <h1>View Services</h1>
+        <h6>
+            {% for i in messages %}
+                {{i}}
+            {% endfor %}
+        </h6>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <tr class="bg-success">
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Department</th>
+                    <th>Action</th>
+                </tr>
+                {% for i in data %}
+                <tr>
+                    <td>{{i.name}}</td>
+                    <td>{{i.description}}</td>
+                    <td>{{i.department.name}}</td>
+                    <td>
+                        <a href="{% url 'edit_ser' i.id %}" class="btn btn-primary mb-1">Edit</a>
+                        <a href=""  class="btn btn-danger " data-toggle="modal" data-target="#myModal{{i.id}}">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+   {% for i in data %}
+   <div class="modal" id="myModal{{i.id}}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header btn-danger">
+          <h4 class="modal-title">Confirm</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+         Do you want to Delete the service   {{i.name}} ?
+         All the users assigned to this service will also be deleted.
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+          <a href="{% url 'd_serv' i.id %}" class="btn btn-danger">Delete</a>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+{% endblock %}

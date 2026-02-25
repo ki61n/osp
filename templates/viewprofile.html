@@ -1,0 +1,127 @@
+
+
+
+<style>
+    .center{
+        margin-inline: auto;
+        width:max-content;
+        border:1px solid rgba(0, 0, 0, 0.123);
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.123);
+
+        .img{
+            
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 255, 255, 0.158);
+            padding: 10px;
+            border-radius: 15px 15px 0px 0px;
+
+            .imgwrapper{
+               
+                width:200px;
+                height:200px;
+                border-radius: 50% ;
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-position: top;
+                background-image: url('{{data.image.url}}');
+
+            }
+        }
+        .content-body{
+            padding-block: 10px;
+            padding-inline: 20px;
+            background-color: rgba(0, 0, 0, 0.21);
+            border-radius: 0 0 15px 15px;
+
+            
+            h2{
+                text-align: center;
+                font-weight: 700;
+                font-size: xx-large;
+            }
+             p{
+                    display: grid;
+                    grid-template-columns: 15ex 1fr;
+
+                    
+                    
+                
+            }
+            
+            
+            .before::before{
+                content: ':';
+                position: relative;
+                width: 10px;
+                height: 10px;
+                left:-1rem;
+
+            }
+
+            p > :nth-child(1){
+                font-weight: 700;
+            }
+        
+        }
+    }
+    .container{
+        min-height: 100svh;
+    }
+
+    @media (width<550px) {
+        .center{
+            padding: 0;
+        
+        .content-body{
+            p{
+            grid-template-columns:9ex 1fr;
+        }
+        .before::before{
+            left:-5px;
+        }
+    }
+        
+    }
+}
+</style>
+<div>
+
+    
+     {% for i in messages %}
+    <h3 style="color:rgb(40, 37, 37)">{{i}}</h3>
+    {% endfor %}
+
+
+    <div class="container bg-light py-5">
+    <h1 class="text-center">Profile</h1>
+    <h2>{% for i in messages %}{{i}}{% endfor %}</h2>
+
+    <div class="center mt-5">
+        <div class="img"> <div class="imgwrapper"></div></div>
+        <div class="content-body">
+            <h2>{{data.user.username}}</h2>
+            <p><span>Name </span><span class="before">{{data.user.first_name}} {{data.user.last_name}}</span></p>
+            <p><span>Email </span><span class="before">{{data.user.email}}</span></p>
+            <p><span>Address </span><span class="before">{{data.address}}</span></p>
+            <p><span>Contact </span><span class="before">{{data.phone}}</span></p>
+            {% if data.user.status == 1 %}
+            <p><span>Department </span><span class="before">{{data.department.name}}</span></p>
+            {% endif %}
+            
+
+        </div>
+    </div>
+    
+
+
+
+</div>
+</div>
+
+
+

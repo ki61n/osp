@@ -1,0 +1,62 @@
+{%  extends 'baseadmin.html' %}
+
+{% block content %}
+
+<div class="container-fluid d-flex justify-content-center align-items-center py-5">
+    <div class="content- w-100">
+
+        <div class="row">
+            <div class="col-sm-6 p-2">
+
+                <div class="table-responsive">
+            <table class="table table-striped">
+                <tr class="bg-success">
+                    <th>name</th>
+                    <th>description</th>        
+                    <th>action</th>
+                </tr>
+                {% for i in dedata %}
+                <tr>
+                    <td>{{i.name}}</td>
+                    <td>{{i.description}}</td>
+                    <td><a href="{% url 'approvedep' i.id %}" class="btn btn-warning"> approve</a></td>
+                </tr>
+                {% endfor %}
+
+
+            </table>
+
+        </div>
+
+            </div>
+            <div class="col-sm-6">
+
+                 <div class="table-responsive">
+            <table class="table table-striped">
+                <tr class="bg-success">
+                    <th>name</th>
+                    <th>description</th>        
+                    <th>action</th>
+                </tr>
+                {% for i in sedata %}
+                <tr>
+                    <td>{{i.name}}</td>
+                    <td>{{i.description}}</td>
+                    <td><a href="{% url 'approveserv' i.id %}" class="btn btn-warning"> approve</a></td>
+                </tr>
+                {% endfor %}
+
+            </table>
+
+        </div>
+
+
+
+            </div>
+        </div>
+        
+       
+    </div>
+</div>
+
+{% endblock %}
