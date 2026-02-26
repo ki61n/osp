@@ -41,7 +41,7 @@
         font-weight: bold;
         position: relative;
     }
-    p{
+   .abc p{
         display: grid;
         grid-template-columns: 15ex 1fr;
         grid-gap: 10px;
@@ -55,7 +55,7 @@
     .text{
         padding-left:20px ;
     }
-    .bold::after{
+   .abc .bold::after{
         content: ':';
         position: absolute;
         right: 5px;
@@ -70,14 +70,15 @@
         background-position: center
     }
     @media (width < 500px) {
-        p{
+      .abc  p{
             grid-template-columns:  1fr;        }
     
-    .bold::after{
+   .abc .bold::after{
         right:210px;
     }
 }
 </style>
+<div>
 
 <div class="container d-flex justify-content-center align-items-center">
     <div class="content-wrapper w-100">
@@ -87,10 +88,11 @@
             {% endfor %}</h6>
                             
         
-        <div class="btn-group d-flex justify-content-between mb-4">
+        <div class="btn-group d-flex flex-wrap justify-content-between mb-4">
             <button class="btn btn-primary" onclick="filterTasks('current')">current tasks</button>
             <button class="btn btn-success" onclick="filterTasks('completed')">completed tasks</button>
             <button class="btn btn-danger" onclick="filterTasks('rejected')">rejected tasks</button>
+            <button class="btn btn-warning" onclick="filterTasks('requested')">requested tasks</button>
         </div>
 
         <div id="task-list">
@@ -98,10 +100,37 @@
 
             {% for i in data %}
             <div class="task-item" data-c-status="{{i.c_status}}" data-a-status="{{i.a_status}}">
-                    {% if i.c_status == 0 and i.a_status == 1 %}
+                {% if i.a_status == 0 %}
+
+                <div class="content-wrapper mb-2 abc">
+            <div class="row">
+                <div class="col-sm-6 p-3 br">
+                    <h4>Service Provider Details</h4>
+                    <hr>
+                    <p><span class="bold">Name       </span> <span class="text">{{i.service_provider.user.first_name}} {{i.user.user.last_name}}</span> </p>
+                    <p><span class="bold">Email      </span> <span class="text">{{i.service_provider.user.email}}</span></p>
+                    <p><span class="bold">Phone      </span> <span class="text">{{i.service_provider.phone}}</span></p>
+                    <p><span class="bold">Address    </span> <span class="text">{{i.service_provider.address}}</span></p>
+                    <div class="d-flex justify-content-between "><div class="img" style="background-image: url('{{i.image.url}}');"></div></div>
+                </div>
+                <div class="col-sm-6 p-3 bl">
+                     <h4>Request Details</h4>
+                     <hr>
+                    <p><span class="bold">Details       </span> <span class="text">{{i.details}}</span> </p>
+                    <p><span class="bold">Locatiom      </span> <span class="text">{{i.location}}</span></p>
+                    <p><span class="bold">Date      </span> <span class="text">{{i.date}}</span></p>
+                    <p><span class="bold">service    </span> <span class="text">{{i.service.name}}</span></p>
+                    <p><span class="bold">Current Status    </span>{% if i.c_status == 0 %} <span class="text badge badge-warning p-2">pending</span>{% elif i.c_status == 1 %} <span class="text badge badge-primary p-2">Completed</span>{% endif %}</p>
+
+                </div>
+            </div>
+        </div>
 
 
-             <div class="content-wrapper mb-2">
+                    {% elif i.c_status == 0 and i.a_status == 1 %}
+
+
+             <div class="content-wrapper mb-2 abc">
             <div class="row">
                 <div class="col-sm-6 p-3 br">
                     <h4>Service Provider Details</h4>
@@ -127,7 +156,7 @@
 
                 {% elif i.c_status == 1 and i.a_status == 1 %}
 
-         <div class="content-wrapper mb-2">
+         <div class="content-wrapper mb-2 abc">
             <div class="row">
                 <div class="col-sm-6 p-3 br">
                     <h4>Service Provider Details</h4>
@@ -154,7 +183,7 @@
             </div>
                     {% elif i.a_status == 2 %}
 
-                 <div class="content-wrapper mb-2">
+                 <div class="content-wrapper mb-2 abc">
             <div class="row">
                 <div class="col-sm-6 p-3 br">
                     <h4>Service Provider Details</h4>
@@ -190,10 +219,9 @@
 </div>
 
             {% endfor %}
+</div>
 
-        </div>
-
-    </div>
+</div>
 
    {% for i in data %}
    <div class="modal" id="myModal{{i.id}}">
@@ -229,6 +257,9 @@
         
       </div>
     </div></div>
+
+    </div>
+
   {% endfor %}
 
 
@@ -246,6 +277,8 @@
             } else if (status === 'completed' && cStatus == '1' && aStatus == '1') {
                 task.style.display = 'block';
             } else if (status === 'rejected' && aStatus == '2') {
+                task.style.display = 'block';
+            } else if (status === 'requested' && aStatus == '0') {
                 task.style.display = 'block';
             } else {
                 task.style.display = 'none';

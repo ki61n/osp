@@ -1,0 +1,31 @@
+{% load static %}
+<style>
+    .mh{
+        min-height: fit-content;
+    }
+</style>
+<footer class="bg-dark text-white pt-3 border-top" aria-label="Admin footer">
+	<div class="container mh">
+		<div class="row align-items-center">
+			<div class="col-md-6 text-left small">
+				<strong>Admin Panel</strong>    
+				<div class="mt-1">Manage departments, services, users and site content.</div>
+			</div>
+			<div class="col-md-3 text-sm-center text-left small">
+				<a class="text-white" href="{% url 'viewapprovels' %}">Approve Requests</a><br>
+				<a class="text-white" href="{% url 'viewserv' %}">Services</a><br>
+				<a class="text-white" href="{% url 'viewdept' %}">Department</a><br>
+			</div>
+			<div class="col-md-3 text-right small">
+				<div>Signed in as: <span class="font-weight-bold">{{ request.user.username }}</span></div>
+				<div class="mt-1"><a class="text-white" href="{% url 'out' %}">Sign out</a></div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12 text-center py-2 small">
+				&copy; {{ now|date:"Y" }} Admin • All rights reserved.
+			</div>
+		</div>
+	</div>
+</footer>
+

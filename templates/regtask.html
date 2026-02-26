@@ -5,6 +5,7 @@
 <div class="container grid  align-items-center">
     <div class="content-wrapper">
         <h1>Register task</h1>
+        <h2>{{udata.department.name}}</h2>
 
 <h2>{% for i in messages %}{{i}}{% endfor %}</h2>
 
@@ -12,12 +13,9 @@
     {% csrf_token %}
 
 
-    <!-- <select name="services" id="" class="form-control" required>
-        #{% for i in sdata %}
-        <option value="{{i.id}}">{{i.name}}</option>
-        #{% endfor %}
-    </select> -->
-    <input type="text" name="services" value="{{udata.service.name}}" class="form-control" required disabled>
+    <!-- Use the provider's service id for the form and show the service name -->
+    <input type="hidden" name="services" value="{{data.service.id}}">   <!-- look up-->
+    <input type="text" class="form-control" value="{{data.service.name}}" disabled>
 
     <input type="text" name="details" placeholder="details" class="form-control" required>
     <input type="text" name="location" placeholder="location" value="{{udata.address}}" class="form-control" required>

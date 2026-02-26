@@ -1,0 +1,35 @@
+{% load static %}
+<style>
+    .mh{
+        min-height: fit-content;
+    }
+</style>
+<footer class="bg-dark text-white border-top mt-4">
+	<div class="container py-3 mh">
+		<div class="row">
+			<div class="col-md-6">
+				<p class="mb-1 text-start ">Worker Dashboard</p>
+				<p class="small mb-0">Tools and links for service providers — manage your profile, tasks and availability.</p>
+			</div>
+			<div class="col-md-3 grid">
+				
+				<ul class="list-unstyled small mb-0 text-white">
+                    <li class="  border-bottom">Quick Links</li>
+					<li><a class=" text-light" href="{% url 'profileworker' %}">My Profile</a></li>
+					<li><a class=" text-light" href="{% url 'viewcurtask' %}">Current Tasks</a></li>
+					<li><a class=" text-light" href="{% url 'viewtaskrequest' %}">Requests</a></li>
+				</ul>
+			</div>
+			<div class="col-md-3 text-right text-white">
+				<div class="small">Signed in as <strong>{{ request.user.username }}</strong></div>
+				<div class="small mt-1 text-light"><a class="text-light" href="{% url 'out' %}">Sign out</a></div>
+			</div>
+		</div>
+		<div class="row mt-3">
+			<div class="col-12 text-center small text-muted text-white">
+				&copy; {{ now|date:"Y" }} Service Marketplace — All rights reserved.
+			</div>
+		</div>
+	</div>
+</footer>
+

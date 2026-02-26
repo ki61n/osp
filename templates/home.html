@@ -1,7 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load static %}
+<style>
+    .bgi{
+        width: 100%;
+        height: 80svh;
+        background-image:url("{% static 'OSP1.png' %}");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: bottom;
+        border-radius: 5px;
 
-<div class="container-fluid">
-    <h1>Home</h1>
+    }
+</style>
+<div class="container-fluid pt-3">
+    <div class="bgi d-flex justify-content-center pt-3 align-items-center"></div>
+
 </div>
+
+{% include 'viewproviders.html'  %}
+
 {% endblock %}

@@ -1,0 +1,41 @@
+{% load static %}
+<style>
+    .mh{
+        min-height: fit-content;
+    }
+</style>
+<footer class="bg-dark text-light pt-4">
+	<div class="container mh">
+		<div class="row">
+			<div class="col-md-4 mb-3">
+				<h5>About</h5>
+				<p class="small">A simple service marketplace built with Django — connect customers and service providers easily.</p>
+			</div>
+			<div class="col-md-4 mb-3">
+				<h5>Quick Links</h5>
+				<ul class="list-unstyled small">
+					<li><a class="text-light" href="/">Home</a></li>
+					<li><a class="text-light" href="/customer/">Services</a></li>
+					<li><a class="text-light" href="{% url 'regworker' %}">Become a Provider</a></li>
+					<li><a class="text-light" href="">Contact</a></li>
+				</ul>
+			</div>
+			<div class="col-md-4 mb-3">
+				<h5>Contact</h5>
+				<p class="small mb-1">Email: <a class="text-light" href="###o@###.com">osp@gmail.com</a></p>
+				<p class="small">Phone: <a class="text-light" href="tel:+10000000000">+91 9876543210</a></p>
+				<!-- <div class="mt-2">
+					<a href="#" class="text-light mr-2"><img src="{% static 'facebook.svg' %}" alt="fb" style="height:20px"></a>
+					<a href="#" class="text-light mr-2"><img src="{% static 'twitter.svg' %}" alt="tw" style="height:20px"></a>
+					<a href="#" class="text-light"><img src="{% static 'instagram.svg' %}" alt="ig" style="height:20px"></a>
+				</div> -->
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12 text-center py-3 small">
+				&copy; {{ now|date:"Y" }} OSP. All rights reserved.
+			</div>
+		</div>
+	</div>
+</footer>
+

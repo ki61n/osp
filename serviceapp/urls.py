@@ -51,9 +51,8 @@ urlpatterns = [
     path('viewapproveldata/<int:id>',views.viewapproveldata,name='viewapproveldata'),
     path('view_content',views.view_content,name='view_content'),
     path('view_rating',views.view_rating,name='view_rating'),
-    path('depapprovels',views.depapprovels,name='depapprovels'),
-    
-
+    path('depapprovels',views.depapprovels,name='depapprovels'), 
+     
     # auth pages
     path('signin',views.signin,name='signin'),
     path('viewapprovels',views.viewapprovels,name='viewapprovels'),
@@ -127,6 +126,9 @@ urlpatterns = [
     path('echackmail',views.echackmail,name='echackmail'),
     path('echackphone',views.echackphone,name='echackphone'), 
 
+    path('notification',views.notification,name='notification'),
+
 
     
 ] 
+

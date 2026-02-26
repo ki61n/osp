@@ -1,0 +1,40 @@
+{% load static %}
+<style>
+    .mh{
+        min-height: fit-content;
+    }
+    .text-center{
+        text-align: center;
+    }
+    
+</style>
+<footer class="bg-dark text-white pt-4">
+	<div class="container mh">
+		<div class="row">
+			<div class="col-md-5 mb-3">
+				<h5 class="mb-1">Need a Service?</h5>
+				<p class="small mb-0">Find trusted service providers in your area and book jobs quickly. Secure payments and verified professionals.</p>
+			</div>
+			<div class="col-md-3 mb-3">
+				
+				<ul class="list-unstyled small mb-0 grid">
+                    <li class="mb-1 bold ">Explore</li>
+					<li><a class="text-white" href="{% url 'customer' %}">Home</a></li>
+					<li><a class="text-white" href="{% url 'customer' %}">Browse Services</a></li>
+					<li><a class="text-white" href="{% url 'viewcustask' %}">My Tasks</a></li>
+				</ul>
+			</div>
+			<div class="col-md-4 mb-3 text-right grid">
+				<p class="mb-1 bold border-bottom">Support</p>
+				<p class="small mb-1">Email: <a class="text-white" href="mailto:support@example.com">support@example.com</a></p>
+				<p class="small">Help center: <a class="text-white" href="">Contact us</a></p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12 text-center py-3 small text-light-50">
+				&copy; {{ now|date:"Y" }} Service Marketplace. All rights reserved.
+			</div>
+		</div>
+	</div>
+</footer>
+

@@ -16,14 +16,15 @@
             color: orange;
         }
 </style>
-<div class="container-fluid">
+<div class="container-fluid d-flex flex-column justify-content-center align-items-center py-5">
 
 
 <h1>History</h1>
+{% if data %}
 
 {% for i in data|dictsortreversed:"date" %}
 
-<div class="content-wrapper mb-2 grid">
+<div class="content-wrapper mb-2 grid w-sm-75 w-100" >
 
      <div class="row">
 
@@ -53,6 +54,12 @@
 </div>
 
 {% endfor %}
+
+{% else %}
+<div class="content-wrapper d-flex justify-content-center align-items-center w-100">
+        <h1>No History</h1>
+</div>
+{% endif %}
 </div>
 
         {% endblock %}

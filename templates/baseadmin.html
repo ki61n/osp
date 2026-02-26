@@ -153,9 +153,17 @@
             .content-wrapper{
                 padding: 20px 5px 20px 5px;
                 border-radius: 5px;
-            }
+  }
+        nav{
+        position: fixed;
+        left:0;
+        top:0;
+        width: 70%;
+    
+        }  
+    }     
             
-        }
+        
         h1{
             text-align: center;
         }
@@ -195,6 +203,7 @@
         {% block content %}
     
     {% endblock %}
+    {% include 'adminfooter.html' %}
     </div>
     
 <script>

@@ -15,7 +15,7 @@
         font-weight: bold;
         position: relative;
     }
-    p{
+   .abc p{
         display: grid;
         grid-template-columns: 15ex 1fr;
         grid-gap: 10px;
@@ -43,7 +43,7 @@
         background-position: center
     }
     @media (width < 500px) {
-        p{
+      .abc  p{
             grid-template-columns:  1fr;        }
     
         .bold::after{
@@ -63,7 +63,7 @@
             {{msg}}
             {% endfor %}</h6>
                 {% for i in data %}
-        <div class="content-wrapper   mb-3">
+        <div class="content-wrapper abc   mb-3">
             <div class="row">
                 <div class="col-sm-6 p-3 br">
                     <h4>Customer Details</h4>

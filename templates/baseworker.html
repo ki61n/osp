@@ -85,6 +85,23 @@
             text-align: center;
         }
 
+        .relative{
+            position:relative;
+
+            .s{
+                position:absolute;
+                
+                border-radius:5px;
+                bottom:-15px;
+                right:10px;
+                color:black;
+                border:1px solid black;
+                padding-inline:5px
+            }
+
+
+        }
+
 
         @media (width < 500px) {
             .content-wrapper{
@@ -99,16 +116,16 @@
 </head>
 <body>
     
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border">
         <a class="navbar-brand" href="{% url 'worker' %}">Home</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav w-100 align-center">
-                <li class="nav-item"><a class="nav-link" href="{% url 'viewtaskrequest' %}">view services requests</a></li>
+                <li class="nav-item"><a class="nav-link relative" href="{% url 'viewtaskrequest' %}">view services requests <span class="s"> {{reqcount}}</span></a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'viewcurtask' %}">current tasks</a></li>
-                <li class="nav-item dropdown ml-auto mr-4">
+                <li class="nav-item dropdown ml-sm-auto mr-4">
                     <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <div class="d-flex align-items-center">
                             <div class="proimg" style="width: 40px; height: 40px; border-radius: 50% ; background-image: url('{{user.image.url}}'); margin-right: 10px;"></div> 
@@ -128,6 +145,11 @@
     
     <div class="main-content">
     {% block content %}{% endblock %}
+<div class="text-white">
+    
+    {% include 'workerfooter.html' %}
+    
+</div>
     </div>
 </body>
 </html>

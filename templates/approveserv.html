@@ -2,7 +2,7 @@
 {% block content %}
 {% load static %}
 
-
+<div class="">
 
 <div class="container grid  align-items-center">
    <div class="content-wrapper">
@@ -83,7 +83,7 @@
 {% if ddata %}
 
 
-   <div class="modal" id="myModa3{{ddata.id}}">
+   <div class="modal" id="myModal3{{ddata.id}}">
     <div class="modal-dialog">
       <div class="modal-content">
       
@@ -112,7 +112,7 @@
 {% else %}
   
 
-   <div class="modal" id="myModa2{{data.id}}">
+   <div class="modal" id="myModal2{{data.id}}">
     <div class="modal-dialog">
       <div class="modal-content">
       
@@ -168,4 +168,5 @@
     </div>
   </div>
   {% endif %}
+  </div>
 {% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'baseadmin.html' %}
+{% block content %}
+<style>
+    .content-wrapper{
+        min-height: fit-content;
+
+        
+
+    }
+    .hover{
+        padding: 0;
+    }
+    .hover:hover{
+        background-color: rgba(0, 0, 0, 0.34) ;
+        a{
+            color: white;
+        }}
+    
+    li{
+        list-style: none;
+        text-align: center;
+        
+        a{
+            text-decoration: none;
+            color: black;
+            text-align: center;
+            display: block;
+            padding: 20px;
+            border-radius: 20px;
+        }
+        a:hover{
+            text-decoration: none;
+            color: white;
+
+        }
+    }
+</style>
+<div class="container py-5 ">
+   <div class="content-wrapper">
+     <h1>Notifications</h1>
+    <div class="mb-4">
+        <ul>
+        {% for item in mixed %}
+            <div class="content-wrapper mb-2 hover">
+                <li>
+                {% if item.type == 'user' %}
+                <a href="{% url 'viewapproveldata' item.obj.id %}" style="height: 100%; background-color: rgb(201, 219, 186);"><strong> {{ item.obj.user.username }}</strong>  Has requested to become a service provider in Deptartment: {% if item.obj.department %}{{ item.obj.department.name }}{% else %}—{% endif %}</a>
+                {% elif item.type == 'department' %}
+                  <a href="{% url 'approvedep' item.obj.id %}" style="height: 100%; background-color: rgb(255, 192, 250);">New Department: <strong> {{ item.obj.name }}</strong> request </a> 
+                {% elif item.type == 'service' %}
+                  <a href="{% url 'approveserv' item.obj.id %}" style="height: 100%; background-color: rgb(149, 149, 248);"> New Service: <strong> {{ item.obj.name }}</strong> request — Dept: {% if item.obj.department %}{{ item.obj.department.name }}{% else %}—{% endif %}</a>
+                {% endif %}
+            </li>
+            </div>
+        {% empty %}
+            <li>No recent items.</li>
+        {% endfor %}
+        </ul>
+
+    </div>
+
+
+   </div>
+</div>
+
+{% endblock  %}
+

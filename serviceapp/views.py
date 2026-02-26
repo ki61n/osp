@@ -19,8 +19,11 @@ import os
 
 # home
 def home(request):
-    return render(request,'home.html') 
+    spdata=Users.objects.filter(user__user_type='1', user__status=1).select_related('user','department','service').order_by('department__name')   
 
+    return render(request,'home.html',{'spdata':spdata}) 
+
+@login_required(login_url='signin')
 def worker(request):
     user= Users.objects.get(user=request.user)
 
@@ -38,8 +41,11 @@ def worker(request):
         stats.append({'rating': i, 'percent': percent})
    
     data=Profile.objects.filter(user=cus)
-    return render(request,'worker.html',{'user':user,'data':data,'reviews':reviews,'stats':stats})
+    reqcount=tasks.objects.filter(service_provider=user,a_status=0).count()
 
+
+    return render(request,'worker.html',{'user':user,'data':data,'reviews':reviews,'stats':stats,'reqcount':reqcount})
+@login_required(login_url='signin')
 def customer(request):
     user=Users.objects.get(user=request.user)
     depdata=Department.objects.filter(status=0)
@@ -50,7 +56,7 @@ def customer(request):
         return render(request,'customer.html',{'depdata':depdata,'spdata':spdata,'user':user,'query':query})
     else:
         return render(request,'customer.html',{'depdata':depdata,'spdata':spdata,'user':user})
-
+@login_required(login_url='signin')
 def admin(request):
     users=Users.objects.filter(user__user_type='1', user__status=0).select_related('user','department').count()
     depuser=Users.objects.filter(department__status=1,user__user_type='1',user__status=0).count()
@@ -58,12 +64,17 @@ def admin(request):
     ser=Services.objects.filter(status=1).count()
     dtotal=dep+ser
     total=users+dtotal-depuser
+    noti=users+dtotal
+    print('noti',noti)
+
+    data=Department.objects.filter(status=0)
+    sdata=Services.objects.filter(status=0)
+
     
  
-    return render(request,'admin.html',{'utotal':users,'dtotal':dtotal,'total':total})
+    return render(request,'admin.html',{'utotal':users,'dtotal':dtotal,'total':total,'data':data,'sdata':sdata,'noti':noti})
 
 
-    return render(request,'admin.html')
 
 def signin(request):
     return render(request,'signin.html')
@@ -75,7 +86,6 @@ def contact(request):
     return render(request,'contact.html')
 
 # registration pages
-
 def regworker(request):
     
     dep=Department.objects.filter(status=0)
@@ -84,6 +94,7 @@ def regworker(request):
 def regcustomer(request):
     return render(request,'regcustomer.html')
 
+@login_required(login_url='signin')
 def regdepartment(request):
     users=Users.objects.filter(user__user_type='1', user__status=0).select_related('user','department').count()
     depuser=Users.objects.filter(department__status=1,user__user_type='1',user__status=0).count()
@@ -94,6 +105,7 @@ def regdepartment(request):
     
     return render(request,'regdepartment.html',{'total':total,'dtotal':dtotal,'utotal':users,'depuser':depuser})
 
+@login_required(login_url='signin')
 def regservice(request):
     users=Users.objects.filter(user__user_type='1', user__status=0).select_related('user','department').count()
     depuser=Users.objects.filter(department__status=1,user__user_type='1',user__status=0).count()
@@ -105,6 +117,7 @@ def regservice(request):
     data=Department.objects.all()
     return render(request,'regservice.html',{'data':data,'total':total,'dtotal':dtotal,'utotal':users,'depuser':depuser})
 
+@login_required(login_url='signin')
 def viewsp(request):
     user=Users.objects.get(user=request.user)
     depdata=Department.objects.filter(status=0) 
@@ -112,6 +125,7 @@ def viewsp(request):
     return render(request,'viewproviders.html',{'spdata':data,'depdata':depdata,'user':user})
 
 
+@login_required(login_url='signin')
 def viewspdetails(request,id):
     pdata=Users.objects.get(id=id)
     user=Users.objects.get(user=request.user)
@@ -131,15 +145,19 @@ def viewspdetails(request,id):
    
     return render(request,'viewspdetails.html',{'pdata':pdata,'data':data,'reviews':reviews,'stats':stats,'depdata':depdata,'user':user})
 
+@login_required(login_url='signin')
 def viewcustask(request):
     udata=Users.objects.get(user=request.user)
     user=Users.objects.get(user=request.user)
     depdata=Department.objects.filter(status=0) 
     data=tasks.objects.filter(user=udata)
+    reqcount=tasks.objects.filter(service_provider=user,a_status=0).count()
+
     
-    return render(request,'viewcustask.html',{'data':data,'depdata':depdata,'user':user})
+    return render(request,'viewcustask.html',{'data':data,'depdata':depdata,'user':user,'reqcount':reqcount})
 
 
+@login_required(login_url='signin')
 def viewcurtask(request):
     udata=Users.objects.get(user=request.user.id)
     user=Users.objects.get(user=request.user)
@@ -149,9 +167,12 @@ def viewcurtask(request):
     print('data',data)
     # data=tasks.objects.filter(user=udata)
     print('data',data)
-    return render(request,'viewcurtask.html',{'data':data,'depdata':depdata,'user':user})
+    reqcount=tasks.objects.filter(service_provider=user,a_status=0).count()
+
+    return render(request,'viewcurtask.html',{'data':data,'depdata':depdata,'user':user,'reqcount':reqcount})
 
 
+@login_required(login_url='signin')
 def viewtaskrequest(request):
     udata=Users.objects.get(user=request.user)
     user=Users.objects.get(user=request.user)
@@ -159,8 +180,11 @@ def viewtaskrequest(request):
     print(udata)
     data=tasks.objects.filter(service_provider=udata)
     print(data)
-    return render(request,'viewtaskrequest.html',{'data':data,'depdata':depdata,'user':user})
+    reqcount=tasks.objects.filter(service_provider=user,a_status=0).count()
 
+    return render(request,'viewtaskrequest.html',{'data':data,'depdata':depdata,'user':user,'reqcount':reqcount})
+
+@login_required(login_url='signin')
 def history(request,id):
     users=Users.objects.filter(user__user_type='1', user__status=0).select_related('user','department').count()
     depuser=Users.objects.filter(department__status=1,user__user_type='1',user__status=0).count()
@@ -169,43 +193,52 @@ def history(request,id):
     dtotal=dep+ser
     total=users+dtotal-depuser
     
-    print('id ',id)
-    uid=Customuser.objects.get(id=id)
-    print('uid ', uid)
-    user=Users.objects.get(user=uid)
-    print('user ', user)
+    ur=Users.objects.get(id=id)
+    
+    uid = get_object_or_404(Customuser, id=ur.user.id)
+
+    user = get_object_or_404(Users, user=uid)
 
     data=tasks.objects.filter(service_provider=user)
-    print('data ', data)
+    
     return render(request,'history.html',{'data':data,'total':total,'dtotal':dtotal,'users':users,'depuser':depuser})
 
 
+@login_required(login_url='signin')
 def profile(request):
     user=Users.objects.get(user=request.user)
     depdata=Department.objects.filter(status=0) 
     uid=request.user.id
     uid=Users.objects.get(user=uid)
     data=Users.objects.get(user=request.user)
-    return render(request,'viewprofile.html',{'data':data,'uid':uid,'user':user,'depdata':depdata})
+    reqcount=tasks.objects.filter(service_provider=user,a_status=0).count()
+
+    return render(request,'viewprofile.html',{'data':data,'uid':uid,'user':user,'depdata':depdata,'reqcount':reqcount})
 
 
+@login_required(login_url='signin')
 def profilecus(request):
     user=Users.objects.get(user=request.user)
     depdata=Department.objects.filter(status=0) 
     uid=request.user.id
     uid=Users.objects.get(user=uid)
     data=Users.objects.get(user=request.user)
-    return render(request,'profilecus.html',{'data':data,'uid':uid,'user':user,'depdata':depdata})
+    reqcount=tasks.objects.filter(service_provider=user,a_status=0).count()
 
+    return render(request,'profilecus.html',{'data':data,'uid':uid,'user':user,'depdata':depdata,'reqcount':reqcount})
 
+@login_required(login_url='signin')
 def profileworker(request):
     user=Users.objects.get(user=request.user)
     depdata=Department.objects.filter(status=0) 
     uid=request.user.id
     uid=Users.objects.get(user=uid)
     data=Users.objects.get(user=request.user)
-    return render(request,'profileworker.html',{'data':data,'uid':uid,'user':user,'depdata':depdata})
+    reqcount=tasks.objects.filter(service_provider=user,a_status=0).count()
 
+    return render(request,'profileworker.html',{'data':data,'uid':uid,'user':user,'depdata':depdata,'reqcount':reqcount})
+
+@login_required(login_url='signin')
 def viewserindep(request,id):
     user=Users.objects.get(user=request.user)
     depdata=Department.objects.filter(status=0) 
@@ -213,12 +246,12 @@ def viewserindep(request,id):
     ddata=Department.objects.get(id=id)
     return render(request,'viewserindep.html',{'data':data,'dedata':ddata,'user':user,'depdata':depdata})
 
-
+@login_required(login_url='signin')
 def viewapproveldata(request,id):
     data=Users.objects.get(id=id)
     return render(request,'viewapproveldata.html',{'data':data})
 
-
+@login_required(login_url='signin')
 def view_content(request):
     user=Users.objects.get(user=request.user)
     reviews=review.objects.filter(task__service_provider=user)
@@ -236,14 +269,17 @@ def view_content(request):
         stats.append({'rating': i, 'percent': percent})
    
     data=Profile.objects.filter(user=cus)
-    return render(request,'view_content.html',{'data':data,'user':user,'reviews':reviews,'stats':stats,'depdata':depdata})
+    reqcount=tasks.objects.filter(service_provider=user,a_status=0).count()
 
+    return render(request,'view_content.html',{'data':data,'user':user,'reviews':reviews,'stats':stats,'depdata':depdata,'reqcount':reqcount})
+
+@login_required(login_url='signin')
 def view_rating(request):
     user=Users.objects.get(user=request.user)
     data=review.objects.filter(task__service_provider=user)
     return render(request,'view_rating.html',{'data':data})
 
-
+@login_required(login_url='signin')
 def depapprovels(request):
     users=Users.objects.filter(user__user_type='1', user__status=0).select_related('user','department').count()
     depuser=Users.objects.filter(department__status=1,user__user_type='1',user__status=0).count()
@@ -259,7 +295,7 @@ def depapprovels(request):
 # authentication
 
 # viewapprovels
-
+@login_required(login_url='signin')
 def viewapprovels(request):
     users=Users.objects.filter(user__user_type='1', user__status=0).select_related('user','department').count()
     depuser=Users.objects.filter(department__status=1,user__user_type='1',user__status=0).count()
@@ -271,35 +307,62 @@ def viewapprovels(request):
     data=Users.objects.all().exclude(user__user_type='2')
     return render(request,'viewapprovels.html',{'data':data,'total':total,'dtotal':dtotal,'utotal':users,'depuser':depuser})
 
+@login_required(login_url='signin')
 def approveserv(request,id):
+    users=Users.objects.filter(user__user_type='1', user__status=0).select_related('user','department').count()
+    depuser=Users.objects.filter(department__status=1,user__user_type='1',user__status=0).count()
+    dep=Department.objects.filter(status=1).count()
+    ser=Services.objects.filter(status=1).count()
+    dtotal=dep+ser
+    total=users+dtotal-depuser
     data=Services.objects.get(id=id)
-    return render(request,'approveserv.html',{'data':data})
+    return render(request,'approveserv.html',{'data':data,'utotal':users,'dtotal':dtotal,'total':total,'depuser':depuser})
+
+@login_required(login_url='signin')
 def approvedep(request,id):
+    users=Users.objects.filter(user__user_type='1', user__status=0).select_related('user','department').count()
+    depuser=Users.objects.filter(department__status=1,user__user_type='1',user__status=0).count()
+    dep=Department.objects.filter(status=1).count()
+    ser=Services.objects.filter(status=1).count()
+    dtotal=dep+ser
+    total=users+dtotal-depuser
     ddata=Department.objects.get(id=id)
-    return render(request,'approveserv.html',{'ddata':ddata})
+    return render(request,'approveserv.html',{'ddata':ddata,'utotal':users,'dtotal':dtotal,'total':total,'depuser':depuser})
 
-
+@login_required(login_url='signin')
 def apdept(request,id):
     data=Services.objects.get(id=id)
     depdata=Department.objects.get(id=data.department.id)
     
-    depdata.name=request.POST['dept_name']
-    depdata.description=request.POST['dept_description']
-    depdata.image=request.FILES.get('dept_image') 
-    depdata.status=0
-    depdata.save()
-    messages.info(request,'department approved')    
-    return redirect('approveserv', id=id)
+    name=request.POST['dept_name']
+    dep=Department.objects.filter(name=name)
+    if dep:
+        messages.info(request,'Department alredy exist')
+        return redirect('approveserv', id=id)
+    else:
+        depdata.name=name
+        depdata.description=request.POST['dept_description']
+        depdata.image=request.FILES.get('dept_image') 
+        depdata.status=0
+        depdata.save()
+        messages.info(request,'department approved')    
+        return redirect('approveserv', id=id)
 
 def aprovdept(request,id):
     depdata=Department.objects.get(id=id)
-    depdata.name=request.POST['dept_name']
-    depdata.description=request.POST['dept_description']
-    depdata.image=request.FILES.get('dept_image') 
-    depdata.status=0
-    depdata.save()
-    messages.info(request,'department approved')    
-    return redirect('depapprovels')
+    name=request.POST['dept_name']
+    dep=Department.objects.filter(name=name)
+    if dep:
+        messages.info(request,'Department alredy exist')
+        return redirect('depapprovels')
+    else:
+        depdata.name=request.POST['dept_name']
+        depdata.description=request.POST['dept_description']
+        depdata.image=request.FILES.get('dept_image') 
+        depdata.status=0
+        depdata.save()
+        messages.info(request,'department approved')    
+        return redirect('depapprovels')
 
 
 def apserv(request,id):
@@ -315,13 +378,16 @@ def apserv(request,id):
 def rejserv(request,id):
     data=Services.objects.get(id=id)
     user=get_object_or_404(Users,service=data)
+    cust=Customuser.objects.get(id=user.user.id)
     email=user.user.email
     send_mail('Rejection mail',
               f""" sorry to inform this we have desided to reject your requset for being a service provider with username  {user.user.username} """,
               settings.EMAIL_HOST_USER,
               [email]
               )
+    
     user.delete()
+    cust.delete()
     data.delete()
     messages.info(request,'user and service rejected')
     return redirect('viewapprovels')
@@ -331,6 +397,7 @@ def rejdept(request,id):
     data=Services.objects.get(id=id)
     depdata=Department.objects.get(id=data.department.id)
     user=get_object_or_404(Users,service=data)
+    cust=Customuser.objects.get(id=user.user.id)
     email=user.user.email
     send_mail('Rejection mail',
               f""" sorry to inform this we have desided to reject your requset for being a service provider with username  {user.user.username} """,
@@ -338,6 +405,7 @@ def rejdept(request,id):
               [email]
               )
     user.delete()
+    cust.delete()
     depdata.delete()
     messages.info(request,'user and department rejected')
     return redirect('viewapprovels')
@@ -345,6 +413,10 @@ def rejdept(request,id):
 def rejectdepart(request,id):
     
     depdata=Department.objects.get(id=id)
+    user=user=get_object_or_404(Users,department=depdata)
+    cust=Customuser.objects.get(id=user.user.id)
+    cust.delete()
+
     
     depdata.delete()
     messages.info(request,'user and department rejected')
@@ -415,6 +487,7 @@ def rejecttask(request,id):
     return redirect('viewtaskrequest')
 # view pages
 
+@login_required(login_url='signin')
 def viewworker(request):
     users=Users.objects.filter(user__user_type='1', user__status=0).select_related('user','department').count()
     depuser=Users.objects.filter(department__status=1,user__user_type='1',user__status=0).count()
@@ -426,7 +499,7 @@ def viewworker(request):
     data=Users.objects.filter(user__user_type='1', user__status=1)
     return render(request,'viewworker.html',{'data':data,'total':total,'dtotal':dtotal,'utotal':users,'depuser':depuser})
 
-
+@login_required(login_url='signin')
 def viewcustomer(request):
     users=Users.objects.filter(user__user_type='1', user__status=0).select_related('user','department').count()
     depuser=Users.objects.filter(department__status=1,user__user_type='1',user__status=0).count()
@@ -438,7 +511,7 @@ def viewcustomer(request):
     data = Users.objects.filter(user__user_type='2')    
     return render(request,'viewcustomer.html',{'data':data,'total':total,'dtotal':dtotal,'utotal':users,'depuser':depuser})
 
-
+@login_required(login_url='signin')
 def viewdept(request):
     users=Users.objects.filter(user__user_type='1', user__status=0).select_related('user','department').count()
     depuser=Users.objects.filter(department__status=1,user__user_type='1',user__status=0).count()
@@ -452,7 +525,7 @@ def viewdept(request):
     print(data)
     return render (request,'viewdept.html',{'data':data,'total':total,'dtotal':dtotal,'utotal':users,'depuser':depuser})
 
-
+@login_required(login_url='signin')
 def viewserv(request):
     users=Users.objects.filter(user__user_type='1', user__status=0).select_related('user','department').count()
     depuser=Users.objects.filter(department__status=1,user__user_type='1',user__status=0).count()
@@ -466,7 +539,7 @@ def viewserv(request):
     print(data)
     return render (request,'viewserv.html',{'data':data,'total':total,'dtotal':dtotal,'utotal':users,'depuser':depuser})
 
-
+@login_required(login_url='signin')
 def regtaskpage(request,id):
     data=Users.objects.get(id=id)
     sdata=Services.objects.filter(department=data.department)
@@ -479,49 +552,74 @@ def regtaskpage(request,id):
     
     return render(request,'regtask.html',{'data':data,'sdata':sdata,'udata':udata})
 
+@login_required(login_url='signin')
 def profile_content(request):
     uid=request.user
     user=Users.objects.get(user=uid)
     data=Users.objects.get(user=request.user)
-    return render(request,'profile_content.html',{'data':data,'user':user})
+    reqcount=tasks.objects.filter(service_provider=user,a_status=0).count()
+
+    return render(request,'profile_content.html',{'data':data,'user':user,'reqcount':reqcount})
 
 
 # edit
 
-
+@login_required(login_url='signin')
 def edit_worker(request):
     data=Users.objects.get(user=request.user)
-    return render(request,'editprow.html',{'data':data})
 
+    reqcount=tasks.objects.filter(service_provider=data,a_status=0).count()
+
+    return render(request,'editprow.html',{'data':data,'user':data,'reqcount':reqcount})
+
+@login_required(login_url='signin')
 def edituser(request):
     data=Users.objects.get(user=request.user)
-    return render(request,'edituser.html',{'data':data})
-
+    return render(request,'edituser.html',{'data':data,'user':data})
+@login_required(login_url='signin')
 def edit_dep(request,id):
+    users=Users.objects.filter(user__user_type='1', user__status=0).select_related('user','department').count()
+    depuser=Users.objects.filter(department__status=1,user__user_type='1',user__status=0).count()
+    dep=Department.objects.filter(status=1).count()
+    ser=Services.objects.filter(status=1).count()
+    dtotal=dep+ser
+    total=users+dtotal-depuser
     data=Department.objects.get(id=id)
-    return render(request,'editdepartment.html',{'data':data})
+    return render(request,'editdepartment.html',{'data':data,'utotal':users,'dtotal':dtotal,'total':total,'depuser':depuser})
 
+@login_required(login_url='signin')
 def edit_ser(request,id):
-    user=Users.objects.get(user=request.user)
+    users=Users.objects.filter(user__user_type='1', user__status=0).select_related('user','department').count()
+    depuser=Users.objects.filter(department__status=1,user__user_type='1',user__status=0).count()
+    dep=Department.objects.filter(status=1).count()
+    ser=Services.objects.filter(status=1).count()
+    dtotal=dep+ser
+    total=users+dtotal-depuser 
     data=Services.objects.get(id=id)
     ddata=Department.objects.filter(status=0)
-    return render(request,'editservice.html',{'data':data,'ddata':ddata,'user':user})
+    return render(request,'editservice.html',{'data':data,'ddata':ddata,'utotal':users,'dtotal':dtotal,'total':total,'depuser':depuser})
 
-
-
+@login_required(login_url='signin')
 def changepassword(request):
     userid=request.user
     user=Users.objects.get(user=userid)
 
-    return render(request,'changepassword.html',{'data':user})
 
+    return render(request,'changepassword.html',{'data':user,'user':user})
+
+@login_required(login_url='signin')
 def changeworkerpass(request):
-    return render(request,'changeworkerpass.html')
+    user=Users.objects.get(user=request.user)
+    reqcount=tasks.objects.filter(service_provider=user,a_status=0).count()
+    return render(request,'changeworkerpass.html',{'user':user,'reqcount':reqcount})
 
+@login_required(login_url='signin')
 def changecustonerpass(request):
-    return render(request,'changecustomerpass.html')
+    user=Users.objects.get(user=request.user)
+    return render(request,'changecustomerpass.html',{'user':user})
 
 
+@login_required(login_url='signin')
 def edit_profile_content(request,id):
     user=Users.objects.get(user=request.user)
     data=Profile.objects.get(id=id)
@@ -624,7 +722,7 @@ def r_worker(request):
             data=Users(department=department,service=service,user=user,phone=phone,address=address,image=image,file=file,id_proof=id_proof)
             data.save()
             messages.info(request,'worker sucessfully registered please wait for admin approval')
-            return redirect('r_worker')
+            return redirect('regworker')
         
         # Pass context if GET request (though usually handled by regworker view)
     dep = Department.objects.all()
@@ -1010,3 +1108,30 @@ def echackphone(request):
     return JsonResponse({'user':user})
 
     
+
+def notification(request):
+    user=Users.objects.filter(user__user_type='1', user__status=0).select_related('user','department').order_by('-id')
+    users=user.count()
+
+    depuser=Users.objects.filter(department__status=1,user__user_type='1',user__status=0).count()
+    depa=Department.objects.filter(status=1).order_by('-id')
+    dep=depa.count()
+    serv=Services.objects.filter(status=1).order_by('-id')
+    ser=serv.count()
+    dtotal=dep+ser
+    total=users+dtotal-depuser
+    # Build a mixed list of items (type + object + comparable key)
+    mixed = []
+    for u in user:
+        mixed.append({'type': 'user', 'obj': u, 'key': u.id})
+    for d in depa:
+        mixed.append({'type': 'department', 'obj': d, 'key': d.id})
+    for s in serv:
+        mixed.append({'type': 'service', 'obj': s, 'key': s.id})
+
+    # Sort mixed list newest first by key (uses id as proxy for recency)
+    mixed.sort(key=lambda x: x['key'], reverse=True)
+
+    data = {'user': user, 'depa': depa, 'serv': serv, 'mixed': mixed}
+
+    return render(request,'notification.html',{'utotal':users,'dtotal':dtotal,'total':total,'depuser':depuser,'user':user,'depa':depa,'serv':serv,'data':data,'mixed':mixed})
