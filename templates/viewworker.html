@@ -23,8 +23,10 @@
                     <th>Name</th>
                     <th>Username</th>
                     <th>Email</th>
-                    
+                    <th>Department</th>
+                    <th>Service</th>
                     <th>History</th>
+                    <th>Edit departmnt / service</th>
                     <th>Delete</th>
                 </tr>
                 {% for i in data %}
@@ -32,8 +34,11 @@
                     <td>{{i.user.first_name}} {{i.user.last_name}}</td>
                     <td>{{i.user.username}}</td>
                     <td>{{i.user.email}}</td>
+                    <td>{{i.department.name}}</td>
+                    <td>{{i.service.name}}</td>
                    
                     <td><a href="{% url 'history' i.id %}" class="btn btn-info">View History</a></td>
+                    <td><a href="{% url 'changedep' i.id %}" class="btn btn-info"> Edit</a></td>
                     <td><a href="#" class="btn btn-danger " data-toggle="modal" data-target="#myModal{{i.id}}">Delete</a></td>
                 </tr>
                 {% endfor %}

@@ -17,7 +17,7 @@
 </style>
 <div class="container d-flex justify-content-center align-items-center py-5">
     <div class="content-wrapper w-100">
-        <h1>Add Contents</h1>
+        <h1>Edit Content</h1>
         <h6>{% for i in messages %}
             {{i}}
             {% endfor %}</h6>
@@ -26,8 +26,11 @@
             {% csrf_token %}
            <div class="row">
             <div class="col-sm-8 grid">
+                <label for="header">Header</label>
                  <input type="text" name="header" id="header" placeholder="header" class="form-control" value="{{data.heading}}">
+                <label for="content">Content</label>
             <textarea rows="5" name="content" id="content" placeholder="content" class="form-control">{{data.description}}</textarea>
+                <label for="image">Image</label>
             <input type="file" name="image" id="image" placeholder="header"  class="form-control">
             <input type="submit"  class="btn btn-info ">
 

@@ -29,9 +29,12 @@
 
         <form action="{% url 'e_serv' data.id %}" method="post" class="grid">
             {% csrf_token %}
+            <label for="name">Service Name</label>
             <input type="text" name="name" value="{{data.name}}" class="form-control">
+            <label for="description">Description</label>
             <input type="text" name="description" value="{{data.description}}"  class="form-control">
-            <select name="department" id=""  class="form-control">
+            <label for="department">Department</label>
+            <select name="department" id="department"  class="form-control">
                 {% for i in ddata %}
                 {% if i.id == data.department.id %}
                 <option value="{{i.id}}" selected >{{i.name}}</option>

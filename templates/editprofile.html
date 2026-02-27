@@ -3,7 +3,8 @@
         gap: 10px;
     }
 </style>
-<div class="container d-flex justify-content-center align-items-center py-5 ">
+<div>
+<div class="container d-flex flex-column justify-content-center align-items-center py-5 ">
     <div class="content-wrapper" style="width: 100%;">
         <h1 class="text-center">Edit Profile</h1>
         <div class="d-flex justify-content-end mb-3">
@@ -27,31 +28,37 @@
             <div class="form-group">
                 <div class="row">
                     <div class="col-sm-6 mb-3 mb-sm-0">
-                        <input type="text" placeholder="First Name" name="fname" value="{{data.user.first_name}}" class="form-control">
+                        <label for="fname">First Name</label>
+                        <input type="text" placeholder="First Name" name="fname" id="fname" value="{{data.user.first_name}}" class="form-control">
                     </div>
                     <div class="col-sm-6">
-                        <input type="text" placeholder="Last Name" name="lname" value="{{data.user.last_name}}" class="form-control">
+                        <label for="lname">Last Name</label>
+                        <input type="text" placeholder="Last Name" name="lname" id="lname" value="{{data.user.last_name}}" class="form-control">
                     </div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="row">
                     <div class="col-sm-6 mb-3 mb-sm-0">
+                        <label for="uname">User Name</label>
                         <input type="text" placeholder="User Name" name="uname" id="uname" value="{{data.user.username}}" class="form-control">
                         <small id="unameerror" class="form-text text-danger"></small>
                     </div>
                     <div class="col-sm-6">
+                        <label for="email">Email</label>
                         <input type="text" placeholder="Email" name="email" id="email" value="{{data.user.email}}" class="form-control">
                         <small id="emailerror" class="form-text text-danger"></small>
                     </div>
                 </div>
             </div>
             <div class="form-group">
+                <label for="phone">Phone</label>
                 <input type="text" placeholder="Phone" name="phone" id="phone" value="{{data.phone}}" class="form-control">
                 <small id="phoneerror" class="form-text text-danger"></small>
             </div>
             <div class="form-group">
-                <textarea name="address" placeholder="Address" class="form-control">{{data.address}}</textarea>
+                <label for="address">Address</label>
+                <textarea name="address" id="address" placeholder="Address" class="form-control">{{data.address}}</textarea>
             </div>
             <div class="form-group">
                 <div class="row">
@@ -72,6 +79,91 @@
             <input type="submit" value="Update" class="btn btn-primary btn-block mt-4">
         </form>
     </div>
+    {%  if data.user.user_type == '1'%}
+    {% if data.department == null or data.service == null %}
+    <div class="container grid  align-items-center justify-content-center">
+    <h4> Please add department and service. your were deleted by admin </h4>
+
+  
+        
+            <div class="content-wrapper">
+                <h1>Change department / service</h1>
+
+                <form action="{% url 'changedepdata' udata.id  %}" method="post">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="dep">Select Departments</label>
+                        <select class="form-control " id="dep" onchange="getservice()" name="dep">
+                            {% for i in ddata%}
+                            {% if  udata.department.id == null %}
+                             <option value="{{i.id}}">{{i.name}}</option>
+                             {% else %}
+                             
+
+
+                            {% if i.id == udata.department.id%}
+                            <option selected value="{{i.id}}">{{i.name}}</option>
+                            {% else %}
+                            <option value="{{i.id}}">{{i.name}}</option>
+                            {% endif %}
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                        <div class="form-group">
+                            <label for="">Select Services</label>
+                            <select class="form-control" name="ser" id="ser">
+                              {% if serv %}
+                                {% for i in serv %}
+
+                                {% if i.id == udata.service.id %}
+                                <option selected value="{{i.id}}">{{i.name}}</option>
+                                {% else %}
+                                <option  value="{{i.id}}">{{i.name}}</option>
+                                {% endif %}
+                                {% endfor %}
+                                {% else %}
+                                <option value="">No service available</option>
+                                {% endif %} 
+                                
+                            </select>
+                        </div>
+                    
+                            <input type="submit" name="" id="" class="form-control btn btn-primary">
+                            
+                   
+                </form>
+            </div>
+            </div>
+            </div>
+            {% endif %}
+            {% endif %}
+
+
+<script>
+    function getservice(){
+        id=$('#dep').val()
+        $.ajax({
+                url:"{% url 'getserv' %}?id="+id,
+                success: function(data){
+                    $('#ser').empty()
+                    if(data.data.length==0){
+                        $('#ser').append("<option value=''>No service available</option>")
+                        
+                    }else{
+                    $.each(data.data, function(key, value){
+                        $('#ser').append(`
+                        <option value="${value.id}">${value.name}</option>
+                        `)
+                    })
+                }
+                }
+            })
+    }
+
+</script>
 </div>
 
 <script>

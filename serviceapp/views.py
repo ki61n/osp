@@ -299,7 +299,7 @@ def depapprovels(request):
 
 
 # authentication
-
+ 
 # viewapprovels
 @login_required(login_url='signin')
 def viewapprovels(request):
@@ -574,13 +574,29 @@ def edit_worker(request):
     data=Users.objects.get(user=request.user)
 
     reqcount=tasks.objects.filter(service_provider=data,a_status=0).count()
+    udata=Users.objects.get(user=request.user)
+    if udata.department:
+        serv=Services.objects.filter(status=0,department=udata.department)  
+    else:
+        serv=None
+    
 
-    return render(request,'editprow.html',{'data':data,'user':data,'reqcount':reqcount})
+    if udata.service:
+        sdata=Services.objects.get(id=udata.service.id)
+
+    else:
+        sdata=None
+   
+    ddata=Department.objects.filter(status=0)
+   
+
+    return render(request,'editprow.html',{'data':data,'user':data,'reqcount':reqcount,'udata':udata,'serv':serv,'sdata':sdata,'ddata':ddata})
 
 @login_required(login_url='signin')
 def edituser(request):
     data=Users.objects.get(user=request.user)
-    return render(request,'edituser.html',{'data':data,'user':data})
+    ddata=Department.objects.filter(status=0)
+    return render(request,'edituser.html',{'data':data,'user':data,'depdata':ddata})
 @login_required(login_url='signin')
 def edit_dep(request,id):
     users=Users.objects.filter(user__user_type='1', user__status=0).select_related('user','department').count()
@@ -603,6 +619,32 @@ def edit_ser(request,id):
     data=Services.objects.get(id=id)
     ddata=Department.objects.filter(status=0)
     return render(request,'editservice.html',{'data':data,'ddata':ddata,'utotal':users,'dtotal':dtotal,'total':total,'depuser':depuser})
+
+
+@login_required(login_url='signin')
+def changedep(request,id):
+    users=Users.objects.filter(user__user_type='1', user__status=0).select_related('user','department').count()
+    depuser=Users.objects.filter(department__status=1,user__user_type='1',user__status=0).count()
+    dep=Department.objects.filter(status=1).count()
+    udata=get_object_or_404(Users,id=id)
+    if udata.department:
+        serv=Services.objects.filter(status=0,department=udata.department)
+    else:
+        serv=None
+    serve=Services.objects.filter(status=1)
+    ser=serve.count()
+    dtotal=dep+ser
+    total=users+dtotal 
+
+    # if udata.service:
+    #     sdata=Services.objects.get(id=udata.service.id)
+
+    # else:
+    #     sdata=None
+   
+    ddata=Department.objects.filter(status=0)
+    return render(request,'changedep.html',{'ddata':ddata,'utotal':users,'dtotal':dtotal,'total':total,'depuser':depuser,'udata':udata,'serv':serv})
+
 
 @login_required(login_url='signin')
 def changepassword(request):
@@ -946,6 +988,28 @@ def e_profilecon(request,id):
         messages.info(request,'profile edited sucessfully')
         return redirect('view_content')
     
+
+def changedepdata(request,id):
+    user=Users.objects.get(id=id)
+
+    if request.method=='POST':
+        dep=request.POST.get('dep')
+        ser=request.POST.get('ser')
+        user.department=Department.objects.get(id=dep)
+        if ser:
+            user.service=Services.objects.get(id=ser)
+        user.save()
+        messages.info(request,'department or service changed')
+        curuser = request.user
+        if curuser.user_type=='1':
+            print('yes')
+            return redirect('edit_worker')
+        else:
+            print('admin')
+            return redirect('viewworker')
+
+
+
 #  delete
 
 def d_user(request,id):
@@ -966,15 +1030,18 @@ def d_serv(request,id):
     users=Users.objects.filter(service=data)
     if users:
         for i in users:
-            cus=Customuser.objects.get(id=i.user.id)
-            email=cus.email
-            send_mail('Rejection mail',
-                f"""dear {cus.first_name} {cus.last_name} sorry to inform this we have desided to delete Service {data.name}. so your account with username  {cus.username} will be deleted. 
-                    if u are  interested in any other department please register again""",
-                settings.EMAIL_HOST_USER,
-                [email]
-                )
-            cus.delete()
+            i.service=None
+            i.save()
+            # cus=Customuser.objects.get(id=i.user.id)
+            
+            # email=cus.email
+            # send_mail('Rejection mail',
+            #     f"""dear {cus.first_name} {cus.last_name} sorry to inform this we have desided to delete Service {data.name}. so your account with username  {cus.username} will be deleted. 
+            #         if u are  interested in any other department please register again""",
+            #     settings.EMAIL_HOST_USER,
+            #     [email]
+            #     )
+            # cus.delete()
     data.delete()
     messages.info(request,'service deleted')
     return redirect('viewserv')
@@ -984,15 +1051,18 @@ def d_dep(request,id):
     users=Users.objects.filter(department=data)
     if users:
         for i in users:
-            cus=Customuser.objects.get(id=i.user.id)
-            email=cus.email
-            send_mail('Rejection mail',
-                f"""dear {cus.first_name} {cus.last_name} sorry to inform this we have desided to delete department {data.name}. so your account with username  {cus.username} will be deleted. 
-                    if u are  interested in any other department please register again""",
-                settings.EMAIL_HOST_USER,
-                [email]
-                )
-            cus.delete()
+            i.department=None
+            i.service=None
+            i.save()
+            # cus=Customuser.objects.get(id=i.user.id)
+            # email=cus.email
+            # send_mail('Rejection mail',
+            #     f"""dear {cus.first_name} {cus.last_name} sorry to inform this we have desided to delete department {data.name}. so your account with username  {cus.username} will be deleted. 
+            #         if u are  interested in any other department please register again""",
+            #     settings.EMAIL_HOST_USER,
+            #     [email]
+            #     )
+            # cus.delete()
     
     data.delete()
     messages.info(request,'department deleted')

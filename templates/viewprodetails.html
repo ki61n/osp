@@ -74,7 +74,12 @@
         <p>{{i.description}}</p></div>
 
         <div class="col-sm-6">
+            {% if i.image %}
         <div class="img-container"><div class="img"><img src="{{i.image.url}}" alt=""></div></div>
+        {% else %}
+                <div class="img-container"><div class="img"><img src="" alt=""></div></div>
+        {% endif %}
+
 
         </div>
 

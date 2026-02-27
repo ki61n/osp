@@ -1,0 +1,83 @@
+{% extends 'baseadmin.html' %}
+{% block content %}
+{% load static %}
+
+
+<div class="container grid  align-items-center justify-content-center">
+
+  
+        
+            <div class="content-wrapper">
+                <h1>Change department / service</h1>
+
+                <form action="{% url 'changedepdata' udata.id  %}" method="post">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="dep">Select Departments</label>
+                        <select class="form-control " id="dep" onchange="getservice()" name="dep">
+                            {% for i in ddata%}
+                            {% if  udata.department.id == null %}
+                             <option value="{{i.id}}">{{i.name}}</option>
+                             {% else %}
+                             
+
+
+                            {% if i.id == udata.department.id%}
+                            <option selected value="{{i.id}}">{{i.name}}</option>
+                            {% else %}
+                            <option value="{{i.id}}">{{i.name}}</option>
+                            {% endif %}
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                        <div class="form-group">
+                            <label for="">Select Services</label>
+                            <select class="form-control" name="ser" id="ser">
+                                {% if serv %}
+                                {% for i in serv %}
+
+                                {% if i.id == udata.service.id %}
+                                <option selected value="{{i.id}}">{{i.name}}</option>
+                                {% else %}
+                                <option  value="{{i.id}}">{{i.name}}</option>
+                                {% endif %}
+                                {% endfor %}
+                                {% else %}
+                                <option value="">No service available</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                    
+                            <input type="submit" name="" id="" class="form-control btn btn-primary">
+                            
+                   
+                </form>
+            </div>
+            </div>
+
+<script>
+    function getservice(){
+        id=$('#dep').val()
+        $.ajax({
+                url:"{% url 'getserv' %}?id="+id,
+                success: function(data){
+                    $('#ser').empty()
+                    if(data.data.length==0){
+                        $('#ser').append("<option value=''>No service available</option>")
+                        
+                    }else{
+                    $.each(data.data, function(key, value){
+                        $('#ser').append(`
+                        <option value="${value.id}">${value.name}</option>
+                        `)
+                    })
+                }
+                }
+            })
+    }
+
+</script>
+{% endblock %}

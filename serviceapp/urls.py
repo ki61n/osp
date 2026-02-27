@@ -27,6 +27,8 @@ urlpatterns = [
     path('edit_worker',views.edit_worker,name='edit_worker'),
     path('edit_dep/<int:id>',views.edit_dep,name='edit_dep'),
     path('edit_ser/<int:id>',views.edit_ser,name='edit_ser'),
+    path('changedep/<int:id>',views.changedep,name='changedep'),
+
 
     path('changepassword',views.changepassword,name='changepassword'),
     path('changeworkerpass',views.changeworkerpass,name='changeworkerpass'),
@@ -86,6 +88,7 @@ urlpatterns = [
     path('e_serv/<int:id>',views.e_serv,name='e_serv'),
     path('e_dep/<int:id>',views.e_dep,name='e_dep'),
     path('e_profilecon/<int:id>',views.e_profilecon,name='e_profilecon'),
+    path('changedepdata/<int:id>',views.changedepdata,name='changedepdata'),
 
 
     # delete

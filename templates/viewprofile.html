@@ -28,7 +28,13 @@
                 background-size: cover;
                 background-repeat: no-repeat;
                 background-position: top;
+                {% if data.image %}
                 background-image: url('{{data.image.url}}');
+                {% else %}
+                background-image: radial-gradient(in hsl longer hue,rgb(255, 255, 255),black);
+                {% endif %}
+                
+                }
 
             }
         }
@@ -37,6 +43,7 @@
             padding-inline: 20px;
             background-color: rgba(0, 0, 0, 0.21);
             border-radius: 0 0 15px 15px;
+            min-width: 310px;
 
             
             h2{
@@ -68,7 +75,7 @@
             }
         
         }
-    }
+    
     .container{
         min-height: 100svh;
     }
@@ -79,27 +86,26 @@
         
         .content-body{
             p{
-            grid-template-columns:9ex 1fr;
+            grid-template-columns: 1fr;
         }
         .before::before{
-            left:-5px;
+            content:''
         }
     }
         
     }
 }
 </style>
-<div>
+
 
     
-     {% for i in messages %}
-    <h3 style="color:rgb(40, 37, 37)">{{i}}</h3>
-    {% endfor %}
+    
 
 
     <div class="container bg-light py-5">
+         
     <h1 class="text-center">Profile</h1>
-    <h2>{% for i in messages %}{{i}}{% endfor %}</h2>
+    <h6>{% for i in messages %}{{i}}{% endfor %}</h6>
 
     <div class="center mt-5">
         <div class="img"> <div class="imgwrapper"></div></div>
@@ -110,7 +116,10 @@
             <p><span>Address </span><span class="before">{{data.address}}</span></p>
             <p><span>Contact </span><span class="before">{{data.phone}}</span></p>
             {% if data.user.status == 1 %}
+            {% if data.department%}
             <p><span>Department </span><span class="before">{{data.department.name}}</span></p>
+            {% endif %}
+            
             {% endif %}
             
 
@@ -120,7 +129,6 @@
 
 
 
-</div>
 </div>
 
 

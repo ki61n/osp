@@ -132,9 +132,13 @@
                 <li class="nav-item"><a class="nav-link" href="{% url 'viewcurtask' %}">current tasks</a></li>
                 <li class="nav-item dropdown ml-sm-auto mr-4">
                     <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {% if user.image %}
                         <div class="d-flex align-items-center">
                             <div class="proimg" style="width: 40px; height: 40px; border-radius: 50% ; background-image: url('{{user.image.url}}'); margin-right: 10px;"></div> 
                         </div>
+                        {% else %}
+                        profile
+                        {% endif %}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                         <a class="dropdown-item" href="{% url 'profileworker' %}">view profile</a>

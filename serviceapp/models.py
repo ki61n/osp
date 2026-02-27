@@ -24,8 +24,8 @@ class Services(models.Model):
 
 
 class Users(models.Model):
-    department=models.ForeignKey(Department,on_delete=models.CASCADE,null=True)
-    service=models.ForeignKey(Services,on_delete=models.CASCADE,null=True)
+    department=models.ForeignKey(Department,on_delete=models.CASCADE,null=True,blank=True)
+    service=models.ForeignKey(Services,on_delete=models.CASCADE,null=True,blank=True)
     user=models.ForeignKey(Customuser,on_delete=models.CASCADE,null=True)
     phone=models.CharField(max_length=200,null=True)
     address=models.TextField(null=True)

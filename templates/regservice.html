@@ -20,18 +20,21 @@
 
 <div class="container  d-flex  align-items-center">
     <div class="content-wrapper w-100 mx-w-500">
-        <h1>Register Service</h1>
-        <h2>
+        <h1 class="mb-3">Register Service</h1>
+        <h6>
             {% for i in messages %}
             {{i}}
             {% endfor %}
 
-        </h2>
+        </h6>
 
         <form action="{% url 'r_serv' %}" method="post" class="grid">
             {% csrf_token %}
+            <label for="name">Service Name</label>
             <input type="text" name="name"  class="form-control" placeholder="Service name">
+            <label for="description">Description</label>
             <input type="text" name="description" value=""  class="form-control" placeholder="Description">
+            <label for="depatment">Department</label>
             <select name="depatment" id=""  class="form-control">
                 {% for i in data %}
                 {% if i.id == data.department.id %}

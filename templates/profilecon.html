@@ -24,8 +24,11 @@
             {% csrf_token %}
            <div class="row">
             <div class="col-sm-8 grid">
+                <label for="header">Header</label>
                  <input type="text" name="header" id="header" placeholder="header" class="form-control">
+                <label for="content">Content</label>
             <textarea rows="5"type="text" name="content" id="content" placeholder="content" class="form-control"></textarea>
+                <label for="image">Image</label>
             <input type="file" name="image" id="image" placeholder="header"  class="form-control">
             <input type="submit"  class="btn btn-info ">
 
