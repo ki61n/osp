@@ -63,7 +63,7 @@ def admin(request):
     dep=Department.objects.filter(status=1).count()
     ser=Services.objects.filter(status=1).count()
     dtotal=dep+ser
-    total=users+dtotal-depuser
+    total=users+dtotal
     noti=users+dtotal
     print('noti',noti)
 
@@ -101,7 +101,7 @@ def regdepartment(request):
     dep=Department.objects.filter(status=1).count()
     ser=Services.objects.filter(status=1).count()
     dtotal=dep+ser
-    total=users+dtotal-depuser
+    total=users+dtotal
     
     return render(request,'regdepartment.html',{'total':total,'dtotal':dtotal,'utotal':users,'depuser':depuser})
 
@@ -112,7 +112,7 @@ def regservice(request):
     dep=Department.objects.filter(status=1).count()
     ser=Services.objects.filter(status=1).count()
     dtotal=dep+ser
-    total=users+dtotal-depuser
+    total=users+dtotal
     
     data=Department.objects.all()
     return render(request,'regservice.html',{'data':data,'total':total,'dtotal':dtotal,'utotal':users,'depuser':depuser})
@@ -150,11 +150,10 @@ def viewcustask(request):
     udata=Users.objects.get(user=request.user)
     user=Users.objects.get(user=request.user)
     depdata=Department.objects.filter(status=0) 
-    data=tasks.objects.filter(user=udata)
-    reqcount=tasks.objects.filter(service_provider=user,a_status=0).count()
+    data=tasks.objects.filter(user=udata).prefetch_related('review_set')
+    # reqcount=tasks.objects.filter(service_provider=user,a_status=0).count()
 
-    
-    return render(request,'viewcustask.html',{'data':data,'depdata':depdata,'user':user,'reqcount':reqcount})
+    return render(request,'viewcustask.html',{'data':data,'depdata':depdata,'user':user})
 
 
 @login_required(login_url='signin')
@@ -191,15 +190,15 @@ def history(request,id):
     dep=Department.objects.filter(status=1).count()
     ser=Services.objects.filter(status=1).count()
     dtotal=dep+ser
-    total=users+dtotal-depuser
-    
+    total=users+dtotal    
     ur=Users.objects.get(id=id)
     
     uid = get_object_or_404(Customuser, id=ur.user.id)
 
     user = get_object_or_404(Users, user=uid)
 
-    data=tasks.objects.filter(service_provider=user)
+    # Prefetch reviews to avoid N+1 queries in the template
+    data=tasks.objects.filter(service_provider=user).prefetch_related('review_set')
     
     return render(request,'history.html',{'data':data,'total':total,'dtotal':dtotal,'users':users,'depuser':depuser})
 
@@ -248,8 +247,15 @@ def viewserindep(request,id):
 
 @login_required(login_url='signin')
 def viewapproveldata(request,id):
+    users=Users.objects.filter(user__user_type='1', user__status=0).select_related('user','department').count()
+    depuser=Users.objects.filter(department__status=1,user__user_type='1',user__status=0).count()
+    dep=Department.objects.filter(status=1).count()
+    ser=Services.objects.filter(status=1).count()
+    dtotal=dep+ser
+    total=users+dtotal
+    noti=users+dtotal
     data=Users.objects.get(id=id)
-    return render(request,'viewapproveldata.html',{'data':data})
+    return render(request,'viewapproveldata.html',{'data':data,'utotal':users,'dtotal':dtotal,'total':total,'depuser':depuser})
 
 @login_required(login_url='signin')
 def view_content(request):
@@ -286,7 +292,7 @@ def depapprovels(request):
     dep=Department.objects.filter(status=1).count()
     ser=Services.objects.filter(status=1).count()
     dtotal=dep+ser
-    total=users+dtotal-depuser
+    total=users+dtotal
     dedata=Department.objects.filter(status=1)
     sedata=Services.objects.filter(status=1)
     return render(request,'adepapprovels.html',{'dedata':dedata,'sedata':sedata,'utotal':users,'dtotal':dtotal,'total':total})
@@ -302,7 +308,7 @@ def viewapprovels(request):
     dep=Department.objects.filter(status=1).count()
     ser=Services.objects.filter(status=1).count()
     dtotal=dep+ser
-    total=users+dtotal-depuser
+    total=users+dtotal
     
     data=Users.objects.all().exclude(user__user_type='2')
     return render(request,'viewapprovels.html',{'data':data,'total':total,'dtotal':dtotal,'utotal':users,'depuser':depuser})
@@ -314,7 +320,7 @@ def approveserv(request,id):
     dep=Department.objects.filter(status=1).count()
     ser=Services.objects.filter(status=1).count()
     dtotal=dep+ser
-    total=users+dtotal-depuser
+    total=users+dtotal
     data=Services.objects.get(id=id)
     return render(request,'approveserv.html',{'data':data,'utotal':users,'dtotal':dtotal,'total':total,'depuser':depuser})
 
@@ -325,7 +331,7 @@ def approvedep(request,id):
     dep=Department.objects.filter(status=1).count()
     ser=Services.objects.filter(status=1).count()
     dtotal=dep+ser
-    total=users+dtotal-depuser
+    total=users+dtotal
     ddata=Department.objects.get(id=id)
     return render(request,'approveserv.html',{'ddata':ddata,'utotal':users,'dtotal':dtotal,'total':total,'depuser':depuser})
 
@@ -335,7 +341,7 @@ def apdept(request,id):
     depdata=Department.objects.get(id=data.department.id)
     
     name=request.POST['dept_name']
-    dep=Department.objects.filter(name=name)
+    dep=Department.objects.filter(name=name).exclude(id=data.department.id)
     if dep:
         messages.info(request,'Department alredy exist')
         return redirect('approveserv', id=id)
@@ -351,7 +357,7 @@ def apdept(request,id):
 def aprovdept(request,id):
     depdata=Department.objects.get(id=id)
     name=request.POST['dept_name']
-    dep=Department.objects.filter(name=name)
+    dep=Department.objects.filter(name=name).exclude(id=id)
     if dep:
         messages.info(request,'Department alredy exist')
         return redirect('depapprovels')
@@ -494,7 +500,7 @@ def viewworker(request):
     dep=Department.objects.filter(status=1).count()
     ser=Services.objects.filter(status=1).count()
     dtotal=dep+ser
-    total=users+dtotal-depuser
+    total=users+dtotal
     
     data=Users.objects.filter(user__user_type='1', user__status=1)
     return render(request,'viewworker.html',{'data':data,'total':total,'dtotal':dtotal,'utotal':users,'depuser':depuser})
@@ -506,7 +512,7 @@ def viewcustomer(request):
     dep=Department.objects.filter(status=1).count()
     ser=Services.objects.filter(status=1).count()
     dtotal=dep+ser
-    total=users+dtotal-depuser
+    total=users+dtotal
     
     data = Users.objects.filter(user__user_type='2')    
     return render(request,'viewcustomer.html',{'data':data,'total':total,'dtotal':dtotal,'utotal':users,'depuser':depuser})
@@ -518,7 +524,7 @@ def viewdept(request):
     dep=Department.objects.filter(status=1).count()
     ser=Services.objects.filter(status=1).count()
     dtotal=dep+ser
-    total=users+dtotal-depuser
+    total=users+dtotal
     
     data=Department.objects.filter(status=0)
     
@@ -532,7 +538,7 @@ def viewserv(request):
     dep=Department.objects.filter(status=1).count()
     ser=Services.objects.filter(status=1).count()
     dtotal=dep+ser
-    total=users+dtotal-depuser
+    total=users+dtotal
     
     data=Services.objects.filter(status=0)
     
@@ -561,7 +567,6 @@ def profile_content(request):
 
     return render(request,'profile_content.html',{'data':data,'user':user,'reqcount':reqcount})
 
-
 # edit
 
 @login_required(login_url='signin')
@@ -583,7 +588,7 @@ def edit_dep(request,id):
     dep=Department.objects.filter(status=1).count()
     ser=Services.objects.filter(status=1).count()
     dtotal=dep+ser
-    total=users+dtotal-depuser
+    total=users+dtotal
     data=Department.objects.get(id=id)
     return render(request,'editdepartment.html',{'data':data,'utotal':users,'dtotal':dtotal,'total':total,'depuser':depuser})
 
@@ -594,7 +599,7 @@ def edit_ser(request,id):
     dep=Department.objects.filter(status=1).count()
     ser=Services.objects.filter(status=1).count()
     dtotal=dep+ser
-    total=users+dtotal-depuser 
+    total=users+dtotal 
     data=Services.objects.get(id=id)
     ddata=Department.objects.filter(status=0)
     return render(request,'editservice.html',{'data':data,'ddata':ddata,'utotal':users,'dtotal':dtotal,'total':total,'depuser':depuser})
@@ -802,17 +807,23 @@ def editprofile(request):
         phone=request.POST['phone']
         if Customuser.objects.filter(username=uname).exclude(id=data.user.id):
             messages.info(request,'username already exists')
-            return redirect('editprofile')
+            if user.user_type=='1':
+                return redirect('edit_worker')
+            else:
+                return redirect('edituser')
         if Customuser.objects.filter(email=email).exclude(id=data.user.id):
             messages.info(request,'email already exists')
-            return redirect('editprofile')
+            if user.user_type=='1':
+                return redirect('edit_worker')
+            else:
+                return redirect('edituser')
         if Users.objects.filter(phone=phone).exclude(user=user):
             messages.info(request,'phone number already exists')
-            return redirect('editprofile') 
-
-
-
-
+            if user.user_type=='1':
+                return redirect('edit_worker')
+            else:
+                return redirect('edituser')
+        
         user.username=request.POST['uname']
         user.email=request.POST['email']
         
@@ -828,8 +839,11 @@ def editprofile(request):
         user.save()
         data.save()
         messages.info(request,'profile updated')
-        return redirect('editprofile')
-    return render(request,'editproprofile.html',{'data':data,'user':user})
+        if user.user_type=='1':
+            return redirect('edit_worker')
+        else:
+            return redirect('edituser')
+    # return render(request,'editproprofile.html',{'data':data,'user':user})
 
 
 
@@ -900,12 +914,18 @@ def e_dep(request,id):
         if Department.objects.filter(name=name).exclude(id=id):
             messages.info(request,'department already exists')
             return redirect('edit_dep',id=id)
+        data.name=name
         data.description=request.POST['description']
-        img=request.FILES.get('image')
-        if data.image:
-            if os.path.exists(data.image.path):
-                os.remove(data.image.path)
-        data.image=img
+        if 'image' in request.FILES:
+            img = request.FILES['image']
+            if data.image:
+                try:
+                    if os.path.exists(data.image.path):
+                        os.remove(data.image.path)
+                except Exception:
+                    pass
+            # always assign the new upload regardless of whether an old file existed
+            data.image = img
         data.save()
         messages.info(request,'department edited sucessfully')
         return redirect('viewdept')
@@ -930,24 +950,50 @@ def e_profilecon(request,id):
 
 def d_user(request,id):
     data=Users.objects.get(id=id)
+    cus=Customuser.objects.get(id=data.user.id)
     email=data.user.email
     send_mail('Rejection mail',
               f"""dear {data.user.first_name} {data.user.last_name} we have desided to delete your account with username  {data.user.username} """,
               settings.EMAIL_HOST_USER,
               [email]
               )
-    data.delete()
+    cus.delete()
     messages.info(request,'user deleted')
     return redirect('viewworker')
 
 def d_serv(request,id):
     data=Services.objects.get(id=id)
+    users=Users.objects.filter(service=data)
+    if users:
+        for i in users:
+            cus=Customuser.objects.get(id=i.user.id)
+            email=cus.email
+            send_mail('Rejection mail',
+                f"""dear {cus.first_name} {cus.last_name} sorry to inform this we have desided to delete Service {data.name}. so your account with username  {cus.username} will be deleted. 
+                    if u are  interested in any other department please register again""",
+                settings.EMAIL_HOST_USER,
+                [email]
+                )
+            cus.delete()
     data.delete()
     messages.info(request,'service deleted')
     return redirect('viewserv')
 
 def d_dep(request,id):
     data=Department.objects.get(id=id)
+    users=Users.objects.filter(department=data)
+    if users:
+        for i in users:
+            cus=Customuser.objects.get(id=i.user.id)
+            email=cus.email
+            send_mail('Rejection mail',
+                f"""dear {cus.first_name} {cus.last_name} sorry to inform this we have desided to delete department {data.name}. so your account with username  {cus.username} will be deleted. 
+                    if u are  interested in any other department please register again""",
+                settings.EMAIL_HOST_USER,
+                [email]
+                )
+            cus.delete()
+    
     data.delete()
     messages.info(request,'department deleted')
     return redirect('viewdept')
@@ -1119,7 +1165,7 @@ def notification(request):
     serv=Services.objects.filter(status=1).order_by('-id')
     ser=serv.count()
     dtotal=dep+ser
-    total=users+dtotal-depuser
+    total=users+dtotal
     # Build a mixed list of items (type + object + comparable key)
     mixed = []
     for u in user:
@@ -1131,6 +1177,7 @@ def notification(request):
 
     # Sort mixed list newest first by key (uses id as proxy for recency)
     mixed.sort(key=lambda x: x['key'], reverse=True)
+    print(mixed)
 
     data = {'user': user, 'depa': depa, 'serv': serv, 'mixed': mixed}
 

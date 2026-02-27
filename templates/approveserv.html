@@ -21,11 +21,12 @@
                     <input type="text" name="dept_description" value=" {{ddata.description}} " class="form-control4">
                     <input type="file" name="dept_image" value="{{ddata.image}}" class="form-control">
                     {% if data.department.status == 0 or ddata.status == 0 %}
-                    <button disabled class="form-control">Approved</button>
+                    <button disabled class="form-control btn btn-info">Approved</button>
                     {% else %}
                     <input type="submit" value="approve" class="form-control btn btn-info">
-                    {% endif %}
                     <a href=""  class="btn btn-danger " data-toggle="modal" data-target="#myModal3{{ddata.id}}">reject</a>
+
+                    {% endif %}
                     </form>
             </div>
             {% else %}
@@ -38,11 +39,11 @@
                     <input type="text" name="dept_description" value="{{data.department.description}} " class="form-control4">
                     <input type="file" name="dept_image" value="{{data.department.image}}" class="form-control">
                     {% if data.department.status == 0 or ddata.status == 0 %}
-                    <button disabled class="form-control">Approved</button>
+                    <button disabled class="form-control btn btn-info">Approved</button>
                     {% else %}
                     <input type="submit" value="approve" class="form-control btn btn-info">
-                    {% endif %}
                     <a href=""  class="btn btn-danger " data-toggle="modal" data-target="#myModal2{{data.id}}">reject</a>
+                    {% endif %}
                     </form>
             </div>
 
@@ -62,8 +63,8 @@
                     <button disabled class="form-control btn btn-info">Approved</button>
                     {% else %}
                     <input type="submit" value="approve" class="btn btn-primary form-control">
-                    {% endif %}
                     <a href=""  class="btn btn-danger " data-toggle="modal" data-target="#myModal1{{data.id}}">reject</a>
+                    {% endif %}
                 </form>
             </div>
         </div>

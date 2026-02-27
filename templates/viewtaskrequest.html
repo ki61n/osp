@@ -42,6 +42,7 @@
         background-size: cover;
         background-position: center
     }
+    
     @media (width < 500px) {
       .abc  p{
             grid-template-columns:  1fr;        }
@@ -62,7 +63,7 @@
         <h6>{% for msg in messages %}
             {{msg}}
             {% endfor %}</h6>
-                {% for i in data %}
+                {% for i in data reversed %}
         <div class="content-wrapper abc   mb-3">
             <div class="row">
                 <div class="col-sm-6 p-3 br">
@@ -73,15 +74,21 @@
                     <p><span class="bold">Phone</span> <span class="text">{{i.user.phone}}</span></p>
                     <p><span class="bold">Address</span> <span class="text">{{i.user.address}}</span></p>
                     <div class="row">
-                        <div class="col-5">
+                        <div class="col-4">
                     {% if i.image %}<div class="img mt-2" style="background-image: url('{{i.image.url}}');"></div>{% endif %}
 
                     </div>
-                        <div class="col-7">
-                            <div class="bold mb-2 text-center">Status</div>
-                            
+                        <div class="col-8">
+                            <!-- <div class="bold mb-2 text-center">Status</div> -->
+                            {% if i.a_status == 1 %}
+                          
+                                {% elif i.a_status == 2 %}
+                                <!-- <button disabled class="btn btn-danger">Rejected</button> -->
+                                {% else %}
+
                  <div class="d-flex justify-content-around">   <a href="{% url 'accepttask' i.id%}" class="btn btn-success mr-2">Accept</a>
                     <a href=""  class="btn btn-danger " data-toggle="modal" data-target="#myModal{{i.id}}">Reject</a></div>
+                    {% endif %}
                         </div>
                         
                     </div>
@@ -100,7 +107,7 @@
                 {% if i.a_status == 1 %}
                     <button disabled class="btn btn-info">Accepted</button>
                 {% elif i.a_status == 2 %}
-                    <button disabled class="btn btn-secondary">Rejected</button>
+                    <button disabled class="btn btn-danger">Rejected</button>
                 {% endif %}
             </div>
                 </div>

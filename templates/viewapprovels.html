@@ -7,7 +7,7 @@
 
 
 <style>
-
+    /* ensure images in table cells are constrained */
     .w{
         width: 100px;
         text-align: center;
@@ -15,11 +15,12 @@
         object-fit: contain;
         object-position: center;
     }
+
    
 </style>
-<div class="">
+<div>
 <div class="container-fluid d-flex justify-content-center align-items-center py-5">
-    <div class="content-wrapper">
+    <div class="content-wrapper w-100">
         
 
 <h1>view approvels</h1>
@@ -28,8 +29,8 @@
 {{i}}
 {% endfor %}
 </h6>
-<div class="table-responsive">
-    
+ <div class="table-responsive">
+       
 <table class="table table-striped text-center">
     <tr class="bg-success">
         
@@ -69,7 +70,10 @@
         <td>{% if i.user.status == 1 %}
             <button href="" class="btn btn-info">Approved</button>
             {% elif i.user.status == 0 %}
+            {% if i.department.status == 1 or i.service.status == 1 %}
+            <div class="grid"> <a href=""  class="btn btn-info " data-toggle="modal" data-target="#myModalinfo">Approve</a>  <a href=""  class="btn btn-danger " data-toggle="modal" data-target="#myModalinfo">Reject</a>   </div>         {% else %}
             <div class="grid"> <a href="{% url 'approveworker' i.user.id %}" class="btn btn-primary">Approve</a>  <a href=""  class="btn btn-danger " data-toggle="modal" data-target="#myModal{{i.user.id }}">Delete</a></div>
+            {% endif %}
             {% endif %}
         </td>
         <td><a href="{% url 'viewapproveldata' i.id %}" class="btn btn-success">View details</a></td>
@@ -84,7 +88,10 @@
 
 
    {% for i in data %}
-   <div class="modal" id="myModal{{i.user.id}}">
+   
+
+  
+  <div class="modal" id="myModal{{i.user.id}}">
     <div class="modal-dialog">
       <div class="modal-content">
       
@@ -108,6 +115,33 @@
       </div>
     </div>
   </div>
+ 
+
+{% endfor %}
+
+  <div class="modal" id="myModalinfo">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header btn-info">
+          <h4 class="modal-title">Info</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+        Please approve both department and service first.
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+        </div>
+        
+      </div>
+    </div>
   </div>
-  {% endfor %}
+
+   </div>
   {% endblock %}

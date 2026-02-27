@@ -207,8 +207,9 @@
             if (err) {
                 err.innerHTML="";
             }
+            emailpattern = /^[^\s@]+@gmail\.[^\s@]+$/;
 
-            emailpattern=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            // emailpattern=/^[^\s@]+@[^gmail\.com]+$/;
             phonepattern=/^[6-9][0-9]{9}$/;
 
             if (! emailpattern.test(email)){

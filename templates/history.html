@@ -1,6 +1,7 @@
 
 {% extends 'baseadmin.html' %}
 {% block content %}
+{% load static %}
 
 <style>
         span{
@@ -15,6 +16,26 @@
         .pe{
             color: orange;
         }
+        .fa-star{
+                background-image: url("{% static 'star.png' %}");
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+                width: 20px;
+                height: 20px;
+
+        }
+        .fa-star-o{
+                background-image: url("{% static 'sta.png' %}");
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+                width: 20px;
+                height: 20px;
+        }
+        .min{
+            min-height: fit-content;
+        }
 </style>
 <div class="container-fluid d-flex flex-column justify-content-center align-items-center py-5">
 
@@ -22,29 +43,53 @@
 <h1>History</h1>
 {% if data %}
 
-{% for i in data|dictsortreversed:"date" %}
+{% for i in data reversed %}
 
 <div class="content-wrapper mb-2 grid w-sm-75 w-100" >
 
      <div class="row">
 
-        <div class="col-sm-7">
+        <div class="col-sm-6">
                 <p><span>Name        : </span> {{i.user.user.first_name}} {{i.user.user.last_name}}</p>
+                <p><span>Username  : </span> {{i.user.user.username}}</p>
                 <p><span>Department  : </span> {{i.service.department.name}}</p>
                 <p><span>Service     : </span> {{i.service.name}}</p>
                 <p><span>Location    : </span> {{i.location}}</p>
                 <p><span>Details     : </span> {{i.details}}</p>
                 <p><span>Date        : </span> {{i.date}}</p>
+                {%  if i.a_status == 1 %}
                 <p><span>Work status        : </span> {%  if i.c_status == 1 %} <span class="ap"> Completed</span>  {% else %} <span class="pe"> Pending</span>{% endif %}</p>
- 
+                {% endif %}
         </div>
-        <div class="col-sm-5 p3">
+        <div class="col-sm-2 p3">
                 <div class="img">
                         <img src="{{i.image.url}}" alt="" height="150px">
                 </div>
                 <p>{%  if i.a_status == 1 %} <span class="ap"> Accepted</span> {% elif i.a_status == 2 %} <span class="re"> Rejected</span> {% else %} <span class="pe"> Pending</span>{% endif %}</p>
 
 
+        </div>
+        <div class="col-sm-4 p-3">
+               <div class="content-wrapper min w-100">
+                <h5>Review</h5>
+                {% for r in i.review_set.all %}
+                    <div class="border-top mt-2 pt-2">
+                        <p><span>Rating: </span>{{ r.rating }}/5</p>
+                        <div class="d-flex">
+                        {% for star in "12345" %}
+                            {% if forloop.counter <= r.rating %}
+                                <span class="fa-star"></span>
+                            {% else %}
+                                <span class="fa fa-star-o"></span>
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+                        <p><span>Comment: </span>{{ r.review }}</p>
+                    </div>
+                {% empty %}
+                    <p class="text-muted">No review for this task.</p>
+                {% endfor %}
+               </div>
         </div>
      </div>
         

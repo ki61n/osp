@@ -52,7 +52,7 @@
     }
     @media (width < 500px) {
         p{
-            grid-template-columns:  1fr;        }
+            grid-template-columns:  1fr; }
     
     .bold::after{
         right:210px;
@@ -106,7 +106,10 @@
     {% if data.user.status == 1 %}
             <button href="" class="btn btn-info" aria-disabled="true">Approved</button>
             {% elif data.user.status == 0 %}
-            <div class="d-flex gap-20"> <a href="{% url 'approveworker' data.user.id %}" class="btn btn-info">approve</a> <a href=""  class="btn btn-danger " data-toggle="modal" data-target="#myModal{{data.user.id }}">Delete</a></div>
+            {% if data.department.status == 1 or data.service.status == 1 %}
+             <a href=""  class="btn btn-info " data-toggle="modal" data-target="#myModalinfo">Approve</a>    <a href=""  class="btn btn-danger " data-toggle="modal" data-target="#myModalinfo">Reject</a>         {% else %}
+            <div class="d-flex gap-20"> <a href="{% url 'approveworker' data.user.id %}" class="btn btn-info">Approve</a> <a href=""  class="btn btn-danger " data-toggle="modal" data-target="#myModal{{data.user.id }}">Reject</a></div>
+            {% endif %}
             {% endif %}
         </div>
 
@@ -114,6 +117,30 @@
 </div>
 
 
+   
+   <div class="modal" id="myModalinfo">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header btn-info">
+          <h4 class="modal-title">Info</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+Please approve both department and service first.
+       </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
    
    <div class="modal" id="myModal{{data.user.id}}">
     <div class="modal-dialog">
@@ -133,7 +160,7 @@
         <!-- Modal footer -->
         <div class="modal-footer">
           <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
-          <a href="{% url 'rejectworker' data.user.id %}" class="btn btn-danger">Delete</a>
+          <a href="{% url 'rejectworker' data.user.id %}" class="btn btn-danger">Reject</a>
         </div>
         
       </div>

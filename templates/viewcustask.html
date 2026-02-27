@@ -69,6 +69,26 @@
         background-size: cover;
         background-position: center
     }
+    .fa-star{
+                background-image: url("{% static 'star.png' %}");
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+                width: 20px;
+                height: 20px;
+
+        }
+        .fa-star-o{
+                background-image: url("{% static 'sta.png' %}");
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+                width: 20px;
+                height: 20px;
+        }
+        .min{
+            min-height: fit-content;
+        }
     @media (width < 500px) {
       .abc  p{
             grid-template-columns:  1fr;        }
@@ -80,9 +100,9 @@
 </style>
 <div>
 
-<div class="container d-flex justify-content-center align-items-center">
+<div class="container d-flex justify-content-center align-items-center p-5hi">
     <div class="content-wrapper w-100">
-        <h1>viewcustask</h1>
+        <h1>My tasks</h1>
         <h6>{% for i in messages %}
             {{i}}
             {% endfor %}</h6>
@@ -98,7 +118,7 @@
         <div id="task-list">
 
 
-            {% for i in data %}
+            {% for i in data reversed %}
             <div class="task-item" data-c-status="{{i.c_status}}" data-a-status="{{i.a_status}}">
                 {% if i.a_status == 0 %}
 
@@ -125,6 +145,7 @@
                 </div>
             </div>
         </div>
+       
 
 
                     {% elif i.c_status == 0 and i.a_status == 1 %}
@@ -153,6 +174,8 @@
                 </div>
             </div>
         </div>
+       
+
 
                 {% elif i.c_status == 1 and i.a_status == 1 %}
 
@@ -179,7 +202,33 @@
                     
                 </div>
             </div>
-                    <a href="#" class="btn btn-warning w-100" data-toggle="modal" data-target="#myModal{{i.id}}">Add review</a>
+           
+
+                    {% if i.review_set.all %}
+<div class="content-wrapper min w-100">
+                <h5>Review</h5>
+                {% for r in i.review_set.all %}
+                    <div class="border-top mt-2 pt-2">
+                        <p><span>Rating: </span>{{ r.rating }}/5</p>
+                        <div class="d-flex">
+                        {% for star in "12345" %}
+                            {% if forloop.counter <= r.rating %}
+                                <span class="fa-star"></span>
+                            {% else %}
+                                <span class="fa fa-star-o"></span>
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+                        <p><span>Comment: </span>{{ r.review }}</p>
+                    </div>
+                {% empty %}
+                    <p class="text-muted">No review for this task.</p>
+                {% endfor %}
+               </div>             {% else %}
+
+                    <!-- <a href="#" class="btn btn-warning w-100" data-toggle="modal" data-target="#myModal{{i.id}}">Add review</a> -->
+<a href="#" class="btn btn-warning w-100" data-toggle="modal" data-target="#myModal{{i.id}}">Add review</a>
+            {% endif %}
             </div>
                     {% elif i.a_status == 2 %}
 
@@ -217,6 +266,9 @@
 
     
 </div>
+{% empty %}
+<div class=" d-flex justify-content-center">no task</div>
+
 
             {% endfor %}
 </div>

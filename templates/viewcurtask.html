@@ -34,6 +34,28 @@
         position: absolute;
         right: 5px;
     }
+
+    .fa-star{
+                background-image: url("{% static 'star.png' %}");
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+                width: 20px;
+                height: 20px;
+
+        }
+        .fa-star-o{
+                background-image: url("{% static 'sta.png' %}");
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+                width: 20px;
+                height: 20px;
+        }
+        .min{
+            min-height: fit-content;
+        }
+
     @media (width < 500px) {
         .abc p{
             grid-template-columns:  1fr;        }
@@ -45,21 +67,27 @@
 </style>
 <div class="container  d-flex   align-items-center py-5">
     <div class="content-wrapper w-100  ">
-        <h1>Current Tasks</h1>
+        <h1 class="mb-3">Current Tasks</h1>
         <h6>{% for i in messages %}
-        {{i}}
+                                   {{i}}
         {% endfor %}</h6>
-                {% for i in data %}
+                {% for i in data reversed %}
         <div class="content-wrapper mb-2">
             <div class="row abc">
                 <div class="col-sm-6 p-3 br">
                     <h4>Customer Details</h4>
                     <hr>
-                    <p><span class="bold">Name       </span> <span class="text">{{i.user.user.first_name}} {{i.user.user.last_name}}</span> </p>
-                    <p><span class="bold">Email      </span> <span class="text">{{i.user.user.email}}</span></p>
-                    <p><span class="bold">Phone      </span> <span class="text">{{i.user.phone}}</span></p>
-                    <p><span class="bold">Address    </span> <span class="text">{{i.user.address}}</span></p>
-                    <p><span class="bold">Change status    </span> <span class="text">{% if i.c_status == 0 %}<a href="{% url 'complete' i.id %}" class="btn btn-primary">>completed </a>{% elif i.c_status == 1 %}<a href="{% url 'pending' i.id %}" class="btn btn-warning">> >pending</a>{% endif %}</span></p>
+                    <p><span class="bold">Name   </span> <span class="text">{{i.user.user.first_name}} {{i.user.user.last_name}}</span> </p>
+                    <p><span class="bold">Email  </span> <span class="text">{{i.user.user.email}}</span></p>
+                    <p><span class="bold">Phone  </span> <span class="text">{{i.user.phone}}</span></p>
+                    <p><span class="bold">Address</span> <span class="text">{{i.user.address}}</span></p>
+                    {% if i.c_status == 0 %}
+                    <p><span class="bold">Change status    </span> <span class="text"><a href="{% url 'complete' i.id %}" class="btn btn-primary">completed </a>     </span></p>
+                    {% elif i.c_status == 1 %}
+
+
+               
+                        {% endif %}
                     
                 </div>
                 <div class="col-sm-6 p-3 bl">
@@ -73,6 +101,31 @@
 
                 </div>
             </div>
+             {% if i.review_set.all %}
+
+            <div class="content-wrapper min w-100">
+                <h5>Review</h5>
+                {% for r in i.review_set.all %}
+                    <div class="border-top mt-2 pt-2">
+                        <p><span>Rating: </span>{{ r.rating }}/5</p>
+                        <div class="d-flex">
+                        {% for star in "12345" %}
+                            {% if forloop.counter <= r.rating %}
+                                <span class="fa-star"></span>
+                            {% else %}
+                                <span class="fa fa-star-o"></span>
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+                        <p><span>Comment: </span>{{ r.review }}</p>
+                    </div>
+                {% empty %}
+                
+                    <h5 class="text-muted w-100">No review for this task.</h5>
+                {% endfor %}
+                
+               </div>
+               {% endif %}
         </div>
         {% empty %}
         <h3>No tasks found</h3>

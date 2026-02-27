@@ -48,7 +48,11 @@
                 <a href="{% url 'viewspdetails' i.id %}">
                 <div class="container-wrapper  bg ">
                     <div class="img-container">
-                        <div class="img" style="background-image: url('{{i.image.url}}');"></div>        
+                        {% if i.image %}
+                        <div class="img" style="background-image: url('{{ i.image.url }}');"></div>   
+                        {% else %}     
+                        <div class="img" style="background-color: rgb(165, 165, 214);"></div>   
+                        {% endif %}
                     </div>
                     <div class="body-container">
                         <div class=""><h6 class="bb"> {{i.department.name}} </h6> 

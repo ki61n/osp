@@ -25,7 +25,6 @@ urlpatterns = [
 # edit pages
     path('edituser',views.edituser,name='edituser'),
     path('edit_worker',views.edit_worker,name='edit_worker'),
-    path('edit_worker',views.edit_worker,name='edit_worker'),
     path('edit_dep/<int:id>',views.edit_dep,name='edit_dep'),
     path('edit_ser/<int:id>',views.edit_ser,name='edit_ser'),
 

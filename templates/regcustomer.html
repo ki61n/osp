@@ -68,7 +68,10 @@
             err.innerHTML="";
 
 
-            emailpattern=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            // emailpattern=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            emailpattern = /^[^\s@]+@gmail\.[^\s@]+$/;
+
             phonepattern=/^[6-9][0-9]{9}$/;
 
             if (! emailpattern.test(email)){
