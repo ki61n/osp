@@ -27,7 +27,11 @@
    <div class="content px-4">
      <div class="row">
         <div class="col-sm-3 p-2">
+            {% if pdata.image %}
             <div class="img-container"><div class="img"><img src="{{pdata.image.url}}" alt=""></div></div>
+            {% else %}
+            <div class="img-container"><div class="img"></div></div>
+            {% endif %}
 
         </div>
         <div class="col-sm-9 p-3 br d-flex flex-column justify-content-center">

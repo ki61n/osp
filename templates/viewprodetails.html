@@ -65,15 +65,15 @@
    
 </style>
 <div class="container d-flex flex-column align-items-center py-5">
-    <div class="content-wrapper w-100 mb-3 grid justify-content-center align-items-center">
+    <div class="content-wrapper w-100 mb-3 grid justify-content-center align-items-center ">
         {% for i in data|dictsortreversed:"id" %}
 
-       <div class="content-wrapper mb-2 w-100 grid justify-content-center">
-        <div class="row">
-            <div class="col-sm-6 bl"><h4 class="bb">{{i.heading}}</h4>
-        <p>{{i.description}}</p></div>
+       <div class="content-wrapper mb-2 w-100 grid justify-content-center ">
+        <div class="row w-100">
+            <div class="col-sm-6 bl w-100 "><h4 class="bb">{{i.heading}}</h4>
+        <p class="w-100 text-left">{{i.description}}</p></div>
 
-        <div class="col-sm-6">
+        <div class="col-sm-6 w-100">
             {% if i.image %}
         <div class="img-container"><div class="img"><img src="{{i.image.url}}" alt=""></div></div>
         {% else %}

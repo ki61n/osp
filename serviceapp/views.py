@@ -4,7 +4,7 @@ from django.contrib import messages
 from .models import Customuser,Department,Services,Users,review,tasks,Profile
 from django.core.mail import send_mail
 from django.conf import settings
-from django.contrib.auth import hashers,login,logout,authenticate
+from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -162,11 +162,12 @@ def viewcurtask(request):
     user=Users.objects.get(user=request.user)
     depdata=Department.objects.filter(status=0) 
     print('udata',udata)
-    data=tasks.objects.filter(service_provider=udata,a_status=1)
+    data=tasks.objects.filter(service_provider=udata,a_status=1).prefetch_related('review_set')
     print('data',data)
     # data=tasks.objects.filter(user=udata)
     print('data',data)
     reqcount=tasks.objects.filter(service_provider=user,a_status=0).count()
+    
 
     return render(request,'viewcurtask.html',{'data':data,'depdata':depdata,'user':user,'reqcount':reqcount})
 
@@ -284,7 +285,6 @@ def view_rating(request):
     user=Users.objects.get(user=request.user)
     data=review.objects.filter(task__service_provider=user)
     return render(request,'view_rating.html',{'data':data})
-
 @login_required(login_url='signin')
 def depapprovels(request):
     users=Users.objects.filter(user__user_type='1', user__status=0).select_related('user','department').count()
@@ -457,7 +457,7 @@ def approveworker(request,id):
                   [email]
                   
                   )
-    messages.info(request,'user approved')
+    messages.info(request,'user approved') 
     return redirect('viewapprovels')
 
 
@@ -553,10 +553,10 @@ def regtaskpage(request,id):
     user=Customuser.objects.get(id=uid)
     
     udata=Users.objects.get(user=user)
-
+    ddata=Department.objects.filter(status=0)
 
     
-    return render(request,'regtask.html',{'data':data,'sdata':sdata,'udata':udata})
+    return render(request,'regtask.html',{'data':data,'sdata':sdata,'udata':udata,'user':udata,'depdata':ddata})
 
 @login_required(login_url='signin')
 def profile_content(request):
@@ -650,9 +650,10 @@ def changedep(request,id):
 def changepassword(request):
     userid=request.user
     user=Users.objects.get(user=userid)
+    ddata=Department.objects.filter(status=0)
 
 
-    return render(request,'changepassword.html',{'data':user,'user':user})
+    return render(request,'changepassword.html',{'data':user,'user':user,'depdata':ddata})
 
 @login_required(login_url='signin')
 def changeworkerpass(request):
@@ -663,7 +664,8 @@ def changeworkerpass(request):
 @login_required(login_url='signin')
 def changecustonerpass(request):
     user=Users.objects.get(user=request.user)
-    return render(request,'changecustomerpass.html',{'user':user})
+    ddata=Department.objects.filter(status=0)
+    return render(request,'changecustomerpass.html',{'user':user,'depdata':ddata})
 
 
 @login_required(login_url='signin')
@@ -1104,13 +1106,6 @@ def log(request):
 def out(request):
     logout(request)
     return redirect('home')
-
-
-
-def search(request):
-    query=request.GET['q']
-
-
 
 
 def regTask(request,id):

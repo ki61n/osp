@@ -111,8 +111,6 @@ urlpatterns = [
 
     path('out',views.out,name='out'),
 
-     path('search',views.search,name='search'),
-
 
     # ajax 
 
